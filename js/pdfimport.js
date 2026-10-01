@@ -127,17 +127,49 @@ window.GA = window.GA || {};
   }
 
   /* ---------------- Estrazione testo con pdf.js ---------------- */
+  // Safari (iPhone) non sa scorrere i ReadableStream con "for await", che pdf.js usa:
+  // senza questo l'import si ferma con "undefined is not a function (near '...t of e...')"
+  function patchReadableStream() {
+    const RS = window.ReadableStream;
+    if (!RS || RS.prototype[Symbol.asyncIterator]) return;
+    RS.prototype.values = function ({ preventCancel = false } = {}) {
+      const reader = this.getReader();
+      return {
+        next: () => reader.read(),
+        async return(value) {
+          if (!preventCancel) await reader.cancel(value).catch(() => {});
+          reader.releaseLock();
+          return { done: true, value };
+        },
+        [Symbol.asyncIterator]() { return this; },
+      };
+    };
+    RS.prototype[Symbol.asyncIterator] = RS.prototype.values;
+  }
+
+  // come page.getTextContent(), ma letto con getReader() che funziona ovunque
+  async function textItems(page) {
+    const reader = page.streamTextContent().getReader();
+    const items = [];
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) return items;
+      items.push(...value.items);
+    }
+  }
+
   async function extractLines(buf) {
+    patchReadableStream();
     const pdfjs = await import(PDFJS_URL);
     pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
     const doc = await pdfjs.getDocument({ data: new Uint8Array(buf) }).promise;
     const out = [];
     for (let p = 1; p <= doc.numPages; p++) {
       const page = await doc.getPage(p);
-      const tc = await page.getTextContent();
+      const items = await textItems(page);
       // raggruppa i frammenti per riga (coordinata y), poi ordina per x
       const rows = [];
-      tc.items.forEach((it) => {
+      items.forEach((it) => {
         if (!it.str || !it.str.trim()) return;
         const y = it.transform[5], x = it.transform[4];
         let row = rows.find((r) => Math.abs(r.y - y) < 3.5);
