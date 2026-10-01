@@ -13,8 +13,9 @@ window.GA = window.GA || {};
   const ui = () => window.GA.ui;
   const ai = () => window.GA.ai;
 
-  const PDFJS_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.min.mjs";
-  const PDFJS_WORKER = "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.worker.min.mjs";
+  // build "legacy": la normale usa funzioni JS recentissime che Safari su iPhone non ha
+  const PDFJS_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/legacy/build/pdf.min.mjs";
+  const PDFJS_WORKER = "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/legacy/build/pdf.worker.min.mjs";
   const MAX_BYTES = 25 * 1024 * 1024;
 
   function open() {
