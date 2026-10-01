@@ -133,6 +133,7 @@ window.GA = window.GA || {};
       ultime_sessioni: data.sessionsLog.slice(-5).map((s) => s.date + " — " + s.dayLabel),
       peso_corporeo_recente: data.weightLog.slice(-6).map((w) => w.date + ": " + w.weight + "kg"),
       alimenti_personali: data.nutrition.customFoods.map((f) => f.name),
+      libro_ricette: window.GA.recipes ? window.GA.recipes.snapshotFor(data) : [],
       dieta_importata: data.nutrition.dietPlan
         ? {
             nome: data.nutrition.dietPlan.name,
@@ -154,7 +155,7 @@ window.GA = window.GA || {};
     "",
     "Ogni messaggio dell'utente arriva con un blocco <stato_app> che contiene i suoi dati aggiornati (profilo, target, cosa ha mangiato oggi, scheda con le ultime sessioni, peso corporeo, calendario). Usalo per dare risposte concrete e personalizzate: cita numeri reali (es. «ieri hai fatto 80kg×8 alla panca, oggi prova 82,5»). Se c'è una dieta_importata, è il piano del suo nutrizionista: rispettala nei consigli e proponi sostituzioni equivalenti invece di stravolgerla. Non ripetere il blocco all'utente.",
     "",
-    "Strumenti: puoi modificare i dati dell'app (obiettivo, target, diario alimentare, alimenti personali, ricette, pesi della prossima sessione, scheda, peso corporeo). Usali quando l'utente te lo chiede o quando conferma una tua proposta; se una modifica è importante (es. sostituire tutta la scheda) e la richiesta è ambigua, proponi prima e chiedi conferma. Quando l'utente dice di aver mangiato qualcosa, registralo nel diario stimando grammature e valori realistici. Dopo aver usato uno strumento, conferma in una frase cosa hai cambiato.",
+    "Strumenti: puoi modificare i dati dell'app (obiettivo, target, diario alimentare, alimenti personali, ricette, pesi della prossima sessione, scheda, peso corporeo). Usali quando l'utente te lo chiede o quando conferma una tua proposta; se una modifica è importante (es. sostituire tutta la scheda) e la richiesta è ambigua, proponi prima e chiedi conferma. Quando l'utente dice di aver mangiato qualcosa, registralo nel diario stimando grammature e valori realistici; se è un piatto del suo libro_ricette, usa quei valori (moltiplicati per le porzioni) come un'unica voce col nome del piatto. Se ti descrive un suo piatto abituale o ti chiede di ricordarlo, salvalo con save_recipe_to_book. Dopo aver usato uno strumento, conferma in una frase cosa hai cambiato.",
     "",
     "Stile: risposte brevi e scorrevoli adatte allo schermo di un telefono. Usa elenchi puntati solo quando aiutano (es. una ricetta o una scheda), grassetto per i numeri chiave, niente tabelle. Se ti chiedono una ricetta, dai ingredienti con grammi e macro totali stimate.",
     "",
@@ -239,6 +240,34 @@ window.GA = window.GA || {};
         name: "save_recipe",
         description: "Salva una ricetta tra le ricette dell'utente.",
         input_schema: { type: "object", properties: { title: { type: "string" }, text: { type: "string", description: "Ingredienti con grammi, procedimento breve e macro stimate" } }, required: ["title", "text"] },
+      },
+      {
+        name: "save_recipe_to_book",
+        description: "Salva (o aggiorna, se esiste già con lo stesso nome) un piatto nel Libro delle ricette dell'utente: ingredienti con grammi e valori di UNA porzione. Dopo l'utente lo aggiunge al diario con un tocco o scrivendone il nome.",
+        input_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            emoji: { type: "string" },
+            ingredients: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  grams: { type: "number" },
+                  kcal: { type: "number", description: "Calorie per i grammi indicati" },
+                  protein_g: { type: "number" },
+                  carbs_g: { type: "number" },
+                  fat_g: { type: "number" },
+                  emoji: { type: "string" },
+                },
+                required: ["name", "grams", "kcal", "protein_g", "carbs_g", "fat_g"],
+              },
+            },
+          },
+          required: ["name", "ingredients"],
+        },
       },
       {
         name: "set_next_weight",
@@ -365,6 +394,15 @@ window.GA = window.GA || {};
         if (!str(input.title) || !str(input.text)) return { result: "Ricetta vuota", isError: true };
         db().updateData((d) => { d.nutrition.savedRecipes.push({ id: db().uid("rec"), title: input.title, text: input.text, ts: Date.now() }); });
         return { result: "Ricetta salvata", label: "Ricetta salvata" };
+      }
+      case "save_recipe_to_book": {
+        const ings = (Array.isArray(input.ingredients) ? input.ingredients : []).filter((it) => str(it.name) && num(it.grams) && num(it.kcal));
+        if (!str(input.name) || !ings.length) return { result: "Ricetta non valida", isError: true };
+        const saved = window.GA.recipes.saveRecipe({
+          name: input.name, emoji: input.emoji, source: "enrico",
+          ingredients: ings.map((it) => ({ name: it.name, grams: it.grams, kcal: it.kcal, p: it.protein_g, c: it.carbs_g, f: it.fat_g, emoji: it.emoji })),
+        });
+        return { result: "Ricetta salvata nel libro: " + saved.name, label: "📖 " + saved.name + " nel libro" };
       }
       case "set_next_weight": {
         if (!str(input.exercise_name) || !num(input.weight_kg)) return { result: "Parametri non validi", isError: true };
@@ -582,6 +620,64 @@ window.GA = window.GA || {};
   const round1 = (n) => Math.round((+n || 0) * 10) / 10;
 
   /* =========================================================
+     Libro delle ricette: dal nome di un piatto agli ingredienti
+     con le grammature di una porzione (output strutturato)
+     ========================================================= */
+  // reference: ricetta simile già nota (libro o ricettario) da adattare
+  async function recipeFromDish(query, reference) {
+    const client = await getClient();
+    const { model } = settings();
+    const schema = {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "Nome del piatto in italiano, pulito e con iniziale maiuscola" },
+        emoji: { type: "string" },
+        ingredients: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string", description: "Ingrediente in italiano, iniziale maiuscola (es. 'Burro chiarificato', 'Riso basmati')" },
+              grams: { type: "number", description: "Grammi (o ml) in una porzione" },
+              kcal: { type: "number", description: "Calorie per i grammi indicati (non per 100 g)" },
+              protein_g: { type: "number" },
+              carbs_g: { type: "number" },
+              fat_g: { type: "number" },
+              emoji: { type: "string" },
+              category: { type: "string", enum: CAT_ENUM() },
+            },
+            required: ["name", "grams", "kcal", "protein_g", "carbs_g", "fat_g", "emoji", "category"],
+            additionalProperties: false,
+          },
+        },
+        note: { type: "string", description: "Una frase breve per l'utente: porzione ipotizzata, varianti considerate" },
+      },
+      required: ["name", "emoji", "ingredients", "note"],
+      additionalProperties: false,
+    };
+    let text = "Piatto: " + query;
+    if (reference && reference.ingredients) {
+      text += "\n\nRicetta simile già nota (usala come base e adattala a quello che ho scritto):\n" + reference.name + ": " + reference.ingredients.map((it) => it.name + " " + it.grams + "g").join(", ");
+    }
+    const res = await client.beta.messages.create(Object.assign(baseParams(model), {
+      max_tokens: 8000,
+      output_config: { effort: "low", format: { type: "json_schema", schema } },
+      system: "Sei un nutrizionista e cuoco. Ricostruisci UNA porzione del piatto indicato come la mangia un adulto (porzione tipica di casa o ristorante in Italia; per piatti etnici la versione più diffusa). Elenca tutti gli ingredienti che pesano sulle calorie, compresi olio, burro, panna, salse e il contorno di carboidrati se fa parte del piatto (es. riso col curry); ignora sale, acqua ed erbe in quantità trascurabili. Grammi a crudo per pasta, riso, cereali, legumi secchi, carne e pesce. Valori nutrizionali per i grammi indicati, da tabelle CREA/USDA; carboidrati netti. Se l'utente indica quantità o varianti (es. 'doppio riso', 'senza panna', '200 g di pollo', 'mezza porzione') rispettale.",
+      messages: [{ role: "user", content: text }],
+    }));
+    if (res.stop_reason === "refusal") throw new Error("Non riesco a ricostruire questo piatto.");
+    const block = res.content.find((b) => b.type === "text");
+    const out = JSON.parse(block.text);
+    return {
+      name: out.name || query, emoji: out.emoji || "🍲", note: out.note || "",
+      ingredients: (out.ingredients || []).filter((it) => it.name && it.grams > 0).map((it) => ({
+        name: it.name, grams: Math.round(it.grams), kcal: Math.round(it.kcal), p: round1(it.protein_g), c: round1(it.carbs_g), f: round1(it.fat_g),
+        emoji: it.emoji || "🍽️", cat: CAT_ENUM().includes(it.category) ? it.category : "altro",
+      })),
+    };
+  }
+
+  /* =========================================================
      Lettura di una scheda da PDF (anche scansionata)
      ========================================================= */
   async function parsePlanPdf(base64) {
@@ -758,19 +854,21 @@ window.GA = window.GA || {};
       required: ["items", "note"],
       additionalProperties: false,
     };
+    // i piatti del libro delle ricette: se l'utente ne nomina uno, valgono le sue grammature
+    const recipesCtx = window.GA.recipes ? window.GA.recipes.promptContext() : "";
     let content;
     if (input.image) {
       content = [
         { type: "image", source: { type: "base64", media_type: input.mediaType || "image/jpeg", data: input.image } },
-        { type: "text", text: "Questa è la foto di cosa ho mangiato: un piatto oppure una confezione. Se è un piatto, riconosci gli alimenti e stima porzioni e valori (un elemento per componente distinto, o uno solo se è un piatto unico come una pizza). Se è una confezione, riconosci il prodotto e, se è leggibile la tabella nutrizionale, usa quei valori (source=etichetta) per una porzione tipica o per il contenuto della confezione se è monoporzione." + (input.text ? "\nNota dell'utente: " + input.text : "") },
+        { type: "text", text: "Questa è la foto di cosa ho mangiato: un piatto oppure una confezione. Se è un piatto, riconosci gli alimenti e stima porzioni e valori (un elemento per componente distinto, o uno solo se è un piatto unico come una pizza). Se è una confezione, riconosci il prodotto e, se è leggibile la tabella nutrizionale, usa quei valori (source=etichetta) per una porzione tipica o per il contenuto della confezione se è monoporzione." + (input.text ? "\nNota dell'utente: " + input.text : "") + recipesCtx },
       ];
     } else if (input.pdf) {
       content = [
         { type: "document", source: { type: "base64", media_type: "application/pdf", data: input.pdf } },
-        { type: "text", text: "Questo documento contiene cosa ho mangiato. Estrai ogni alimento o piatto con porzione e valori nutrizionali: usa quelli scritti se presenti, altrimenti stimali." },
+        { type: "text", text: "Questo documento contiene cosa ho mangiato. Estrai ogni alimento o piatto con porzione e valori nutrizionali: usa quelli scritti se presenti, altrimenti stimali." + recipesCtx },
       ];
     } else {
-      content = "Ecco cosa ho mangiato. Estrai ogni alimento o piatto con porzione e valori nutrizionali: usa quelli che ho scritto se presenti (anche parziali), altrimenti stimali.\n\n" + input.text;
+      content = "Ecco cosa ho mangiato. Estrai ogni alimento o piatto con porzione e valori nutrizionali: usa quelli che ho scritto se presenti (anche parziali), altrimenti stimali." + recipesCtx + "\n\n" + input.text;
     }
     const res = await client.beta.messages.create(Object.assign(baseParams(model), {
       max_tokens: 16000,
@@ -801,5 +899,5 @@ window.GA = window.GA || {};
     return true;
   }
 
-  window.GA.ai = { MODELS, DEFAULT_MODEL, settings, saveSettings, isConfigured, chat, lookupFood, parsePlanPdf, parseDietPdf, analyzeFoodLog, testKey, friendlyError, buildPlanPreservingIds, runTool };
+  window.GA.ai = { MODELS, DEFAULT_MODEL, settings, saveSettings, isConfigured, chat, lookupFood, recipeFromDish, parsePlanPdf, parseDietPdf, analyzeFoodLog, testKey, friendlyError, buildPlanPreservingIds, runTool };
 })();

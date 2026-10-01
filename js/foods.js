@@ -45,6 +45,7 @@ window.GA = window.GA || {};
     ["f_speck", "carni", "Speck", "🥓", 303, 28, 0.5, 21, 30],
     ["f_salame", "carni", "Salame", "🥓", 400, 26, 1, 33, 30],
     ["f_mortadella", "carni", "Mortadella", "🥓", 317, 15, 1, 28, 30],
+    ["f_guanciale", "carni", "Guanciale", "🥓", 655, 9, 0, 69, 40],
 
     // --- Pesce ---
     ["f_tonno", "pesce", "Tonno al naturale", "🐟", 103, 24, 0, 0.8, 80],
@@ -89,6 +90,11 @@ window.GA = window.GA || {};
     ["f_emmental", "latticini", "Emmental", "🧀", 380, 29, 0, 29, 30],
     ["f_scamorza", "latticini", "Scamorza", "🧀", 334, 25, 1, 25.6, 50],
     ["f_panna", "latticini", "Panna da cucina", "🥛", 205, 2.5, 3.5, 20, 30],
+    ["f_pecorino", "latticini", "Pecorino romano", "🧀", 387, 25.5, 0.2, 32, 20],
+    ["f_tuorlo", "latticini", "Tuorlo d'uovo", "🥚", 325, 16, 0, 29, 20],
+    ["f_mascarpone", "latticini", "Mascarpone", "🧀", 455, 4.6, 4, 47, 30],
+    ["f_besciamella", "latticini", "Besciamella", "🥛", 135, 4, 10, 9, 50],
+    ["f_cheddar", "latticini", "Formaggio a fette (cheddar)", "🧀", 300, 18, 4, 24, 20],
 
     // --- Cereali & pane ---
     ["f_riso", "carboidrati", "Riso", "🍚", 350, 6.7, 79, 0.6, 80],
@@ -121,6 +127,14 @@ window.GA = window.GA || {};
     ["f_muesli", "carboidrati", "Muesli", "🥣", 370, 9.7, 66, 6, 50],
     ["f_granola", "carboidrati", "Granola", "🥣", 450, 10, 64, 17, 40],
     ["f_farina", "carboidrati", "Farina 00", "🌾", 340, 11, 73, 1, 50],
+    ["f_pangrattato", "carboidrati", "Pangrattato", "🍞", 395, 13, 72, 5.5, 20],
+    ["f_noodles_riso", "carboidrati", "Noodles di riso", "🍜", 364, 6, 80, 0.6, 80],
+    ["f_noodles", "carboidrati", "Noodles di grano", "🍜", 350, 11, 70, 2, 80],
+    ["f_tortilla", "carboidrati", "Tortilla di frumento", "🫓", 310, 8.5, 50, 8, 70],
+    ["f_pane_pita", "carboidrati", "Pane pita", "🫓", 275, 9, 55, 1.2, 90],
+    ["f_panino_burger", "carboidrati", "Panino per hamburger", "🍔", 270, 9, 48, 4.5, 80],
+    ["f_crostini", "carboidrati", "Crostini di pane", "🍞", 410, 11, 70, 9, 20],
+    ["f_patatine_forno", "carboidrati", "Patatine al forno (surgelate)", "🍟", 160, 2.5, 25, 5.5, 150],
 
     // --- Legumi & proteine vegetali ---
     ["f_ceci_secchi", "legumi", "Ceci secchi", "🫘", 334, 21, 47, 6.3, 60],
@@ -163,6 +177,8 @@ window.GA = window.GA || {};
     ["f_cipolla", "verdura", "Cipolla", "🧅", 40, 1.1, 9.3, 0.1, 50],
     ["f_sedano", "verdura", "Sedano", "🥬", 16, 0.7, 3, 0.2, 100],
     ["f_barbabietola", "verdura", "Barbabietola", "🥗", 43, 1.6, 9.6, 0.2, 100],
+    ["f_aglio", "verdura", "Aglio", "🧄", 120, 6, 24, 0.5, 5],
+    ["f_germogli", "verdura", "Germogli di soia", "🌱", 30, 3, 4, 0.2, 50],
 
     // --- Frutta ---
     ["f_banana", "frutta", "Banana", "🍌", 89, 1.1, 23, 0.3, 120],
@@ -213,6 +229,13 @@ window.GA = window.GA || {};
     ["f_miele", "condimenti", "Miele", "🍯", 304, 0.3, 82, 0, 15],
     ["f_marmellata", "condimenti", "Marmellata", "🫙", 250, 0.5, 60, 0, 20],
     ["f_zucchero", "condimenti", "Zucchero", "🍬", 392, 0, 100, 0, 5],
+    ["f_ghee", "condimenti", "Burro chiarificato (ghee)", "🧈", 900, 0, 0, 99.5, 10],
+    ["f_olio_semi", "condimenti", "Olio di semi", "🌻", 899, 0, 0, 99.9, 10],
+    ["f_spezie", "condimenti", "Spezie miste (curry, garam masala…)", "🌶️", 300, 12, 40, 12, 3],
+    ["f_teriyaki", "condimenti", "Salsa teriyaki", "🫙", 90, 6, 16, 0, 20],
+    ["f_caesar", "condimenti", "Salsa Caesar", "🫙", 450, 2, 4, 47, 20],
+    ["f_salsa_burger", "condimenti", "Salsa burger", "🫙", 350, 1, 12, 33, 15],
+    ["f_olive", "condimenti", "Olive", "🫒", 145, 1, 1, 15, 20],
 
     // --- Dolci & snack ---
     ["f_cioccolato", "snack", "Cioccolato fondente", "🍫", 546, 7.8, 46, 31, 20],
@@ -227,6 +250,7 @@ window.GA = window.GA || {};
     ["f_barretta_cereali", "snack", "Barretta ai cereali", "🥣", 400, 6, 70, 10, 25],
     ["f_taralli", "snack", "Taralli", "🥨", 450, 10, 65, 17, 30],
     ["f_grissini", "snack", "Grissini", "🥖", 412, 12, 68, 9, 20],
+    ["f_savoiardi", "snack", "Savoiardi", "🍪", 390, 8, 80, 4, 30],
 
     // --- Bevande (per 100 ml) ---
     ["f_caffe", "bevande", "Caffè espresso", "☕", 2, 0.1, 0, 0.2, 30],
@@ -241,6 +265,9 @@ window.GA = window.GA || {};
     ["f_latte_mandorla", "bevande", "Bevanda alla mandorla", "🥛", 24, 0.5, 3, 1.1, 200],
     ["f_latte_soia", "bevande", "Bevanda di soia", "🥛", 39, 3.3, 2.5, 1.8, 200],
     ["f_latte_avena", "bevande", "Bevanda d'avena", "🥛", 46, 1, 7, 1.5, 200],
+    ["f_latte_cocco", "bevande", "Latte di cocco", "🥥", 197, 2, 2.8, 21, 100],
+    ["f_vino_bianco", "bevande", "Vino bianco", "🥂", 75, 0.1, 2.6, 0, 150],
+    ["f_brodo", "bevande", "Brodo vegetale", "🍲", 5, 0.3, 0.5, 0.2, 250],
 
     // --- Piatti & integratori ---
     ["f_whey", "altro", "Proteine whey", "💪", 380, 75, 8, 5, 30],

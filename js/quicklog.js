@@ -157,7 +157,7 @@ window.GA = window.GA || {};
         const meal = MEALS.some((m) => m.id === it.meal) ? it.meal : nut().defaultMeal();
         day[meal].push({
           id: db().uid("item"), foodId: it.foodId, name: it.name, grams: it.grams || 0, kcal: Math.round(it.kcal), p: r1(it.p), c: r1(it.c), f: r1(it.f),
-          emoji: it.emoji || "🍽️", cat: it.cat || "altro", manual: it.manual !== false && !it.foodId, ts: Date.now(),
+          emoji: it.emoji || "🍽️", cat: it.cat || "altro", manual: it.manual !== false && !it.foodId, recipeId: it.recipeId, ts: Date.now(),
         });
       });
     });
@@ -332,7 +332,7 @@ window.GA = window.GA || {};
         '<button class="rm-btn" data-rvdel="' + i + '" aria-label="Rimuovi">' + ui().icon("close") + "</button></div>" +
         '<div class="rv-nums">' + field(i, "kcal", "kcal") + field(i, "p", "P") + field(i, "c", "C") + field(i, "f", "G") + "</div>" +
         '<div class="row" style="gap:8px;margin-top:6px;"><select data-rv="' + i + '" data-k="meal" style="flex:1;">' + MEALS.map((m) => '<option value="' + m.id + '" ' + (m.id === it.meal ? "selected" : "") + ">" + m.emoji + " " + m.label + "</option>").join("") + "</select>" +
-        '<span class="small muted" style="font-weight:700;white-space:nowrap;">' + (it.grams ? it.grams + " g" : "porzione") + (it.source === "etichetta" ? " · 🏷️ etichetta" : it.source === "stima" ? " · stima" : it.unknown ? " · ⚠️ da completare" : "") + "</span></div>" +
+        '<span class="small muted" style="font-weight:700;white-space:nowrap;">' + (it.grams ? it.grams + " g" : "porzione") + (it.source === "etichetta" ? " · 🏷️ etichetta" : it.source === "ricetta" ? " · 📖 ricetta" : it.source === "stima" ? " · stima" : it.unknown ? " · ⚠️ da completare" : "") + "</span></div>" +
         "</div>"
       ).join("") || '<div class="empty">Nessun alimento</div>';
       list.querySelectorAll("[data-rv]").forEach((el) => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => {
@@ -437,7 +437,16 @@ window.GA = window.GA || {};
     if (kcal == null && hasMac) kcal = Math.round((mac.p || 0) * 4 + (mac.c || 0) * 4 + (mac.f || 0) * 9);
     if (kcal != null) return { name, meal, grams: Math.round(grams), kcal: Math.round(kcal), p: r1(mac.p), c: r1(mac.c), f: r1(mac.f), emoji: "🍽️" };
 
-    // nessun valore scritto: provo col catalogo
+    // nessun valore scritto: prima un piatto del libro delle ricette, poi il catalogo
+    const dish = window.GA.recipes.matchDish(name);
+    if (dish) {
+      const it = window.GA.recipes.dishItem(dish, 1);
+      if (grams && it.grams) {
+        const k = grams / it.grams;
+        Object.assign(it, { grams: Math.round(grams), kcal: Math.round(it.kcal * k), p: r1(it.p * k), c: r1(it.c * k), f: r1(it.f * k) });
+      }
+      return Object.assign(it, { meal, source: "ricetta" });
+    }
     const food = window.GA.diet.matchFood(name);
     if (food) {
       const g = grams || food.portion || 100;

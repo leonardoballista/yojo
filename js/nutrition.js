@@ -1,6 +1,6 @@
 /* ===========================================================
    nutrition.js — sezione Cibo: anello calorie animato, dieta
-   importata (dietimport.js), ricerca
+   importata (dietimport.js), libro delle ricette (recipes.js), ricerca
    istantanea nel catalogo, recenti, categorie illustrate,
    aggiunta rapida con slider, pasti del giorno e alimenti nuovi
    calcolati da Enrico AI (calorie e macro automatiche).
@@ -61,6 +61,7 @@ window.GA = window.GA || {};
     html += '<div class="searchbar">' + ui().icon("search") + '<input type="search" id="nu-search" placeholder="Cerca tra ' + allFoods(data).length + ' alimenti…" autocomplete="off" value="' + ui().escapeHtml(searchQuery) + '" /></div>';
     html += '<div class="search-results" id="nu-results"></div>';
     html += recentsHtml(data);
+    html += window.GA.recipes.cardHtml(data);
     html += '<div class="section-title">Categorie</div>' + categoryGrid();
     html += aiCard();
     html += '<div class="section-title">I pasti di oggi <span class="small muted" style="font-family:var(--font-body);font-weight:700;">' + Math.round(t.kcal) + " kcal</span></div>";
@@ -70,6 +71,7 @@ window.GA = window.GA || {};
     wire(container, data);
     window.GA.quickLog.wireActions(container);
     window.GA.diet.wireCard(container);
+    window.GA.recipes.wireCard(container);
     animateHero(container, t, targets);
     if (searchQuery) renderResults(container, data);
     lastAddedId = null;
@@ -219,7 +221,9 @@ window.GA = window.GA || {};
       let it = null;
       MEALS.forEach((m) => (day[m.id] || []).forEach((x) => { if (x.id === b.dataset.recent) it = x; }));
       if (!it) return;
-      if (isManual(it)) window.GA.quickLog.openManual({ prefill: it });
+      const rec = it.recipeId && window.GA.recipes.getRecipe(it.recipeId);
+      if (rec) window.GA.recipes.openLog(rec);
+      else if (isManual(it)) window.GA.quickLog.openManual({ prefill: it });
       else openQuickAdd(foodFromItem(d, it), { grams: it.grams, fromEl: b });
     }));
     container.querySelector("#nu-targets").addEventListener("click", () => window.GA.app.openTargetsSheet());
@@ -256,11 +260,12 @@ window.GA = window.GA || {};
     const q = searchQuery.trim();
     if (!q) { box.innerHTML = ""; return; }
     const res = foods().search(q, allFoods(data)).slice(0, 8);
-    let html = '<div class="card">';
+    let html = '<div class="card">' + window.GA.recipes.searchRowsHtml(q, 3);
     res.forEach((f) => { html += foodRowHtml(f); });
     html += notFoundRow("nu-ai-q", q, res.length);
     html += "</div>";
     box.innerHTML = html;
+    window.GA.recipes.wireRows(box);
     box.querySelectorAll("[data-food]").forEach((row) => row.addEventListener("click", () => {
       openQuickAdd(allFoods(db().getData()).find((f) => f.id === row.dataset.food), { fromEl: row.querySelector(".food-tile") });
     }));
@@ -305,9 +310,10 @@ window.GA = window.GA || {};
         inner = '<div class="cat-scroll">' + foods().CATEGORIES.map((c) => '<button class="cat-chip" data-pcat="' + c.id + '" style="--tint:' + c.color + '">' + ui().catIcon(c.id, 30) + "<span>" + c.short + "</span></button>").join("") + "</div>";
       } else {
         const res = foods().search(term, allFoods(data)).slice(0, 20);
-        inner = '<div class="card" style="padding:4px 14px;">' + res.map(foodRowHtml).join("") + notFoundRow("pk-ai", term, res.length) + "</div>";
+        inner = '<div class="card" style="padding:4px 14px;">' + window.GA.recipes.searchRowsHtml(term, 3) + res.map(foodRowHtml).join("") + notFoundRow("pk-ai", term, res.length) + "</div>";
       }
       list.innerHTML = inner;
+      window.GA.recipes.wireRows(list, meal);
       list.querySelectorAll("[data-pcat]").forEach((b) => b.addEventListener("click", () => openCategorySheet(b.dataset.pcat, meal)));
       list.querySelectorAll("[data-food]").forEach((row) => row.addEventListener("click", () => {
         openQuickAdd(allFoods(db().getData()).find((f) => f.id === row.dataset.food), { meal, fromEl: row.querySelector(".food-tile") });
