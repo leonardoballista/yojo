@@ -1,0 +1,288 @@
+/* ===========================================================
+   foods.js — catalogo alimenti (valori per 100 g, riferiti a
+   crudo salvo diversa indicazione) e categorie con colore.
+   Valori medi da tabelle CREA / etichette comuni: indicativi.
+   =========================================================== */
+window.GA = window.GA || {};
+
+(function () {
+  // color = tinta della categoria usata per tile, chip e icone
+  const CATEGORIES = [
+    { id: "carni", label: "Carne & salumi", short: "Carne", emoji: "🍗", color: "#FF6B5B" },
+    { id: "pesce", label: "Pesce", short: "Pesce", emoji: "🐟", color: "#38B6FF" },
+    { id: "latticini", label: "Uova & latticini", short: "Uova & latte", emoji: "🧀", color: "#FFC83D" },
+    { id: "carboidrati", label: "Cereali & pane", short: "Cereali", emoji: "🍚", color: "#FF9F43" },
+    { id: "legumi", label: "Legumi & veg", short: "Legumi", emoji: "🫘", color: "#C77DFF" },
+    { id: "verdura", label: "Verdura", short: "Verdura", emoji: "🥦", color: "#2ED39A" },
+    { id: "frutta", label: "Frutta", short: "Frutta", emoji: "🍎", color: "#FF4D8D" },
+    { id: "fruttasecca", label: "Frutta secca & semi", short: "Frutta secca", emoji: "🥜", color: "#C8894B" },
+    { id: "condimenti", label: "Condimenti", short: "Condimenti", emoji: "🫒", color: "#9BD53B" },
+    { id: "snack", label: "Dolci & snack", short: "Snack", emoji: "🍪", color: "#F472B6" },
+    { id: "bevande", label: "Bevande", short: "Bevande", emoji: "🥤", color: "#5B8CFF" },
+    { id: "altro", label: "Piatti & integratori", short: "Piatti", emoji: "🍕", color: "#8B6CFF" },
+  ];
+
+  // [id, cat, nome, emoji, kcal, proteine, carboidrati, grassi, porzione g]
+  const RAW = [
+    // --- Carne & salumi ---
+    ["f_pollo", "carni", "Petto di pollo", "🍗", 110, 23.3, 0, 1.2, 150],
+    ["f_coscia_pollo", "carni", "Coscia di pollo (senza pelle)", "🍗", 130, 18, 0, 6.5, 150],
+    ["f_tacchino", "carni", "Fesa di tacchino", "🦃", 107, 24, 0, 1.2, 150],
+    ["f_manzo", "carni", "Manzo magro", "🥩", 129, 21.3, 0, 5, 150],
+    ["f_macinato", "carni", "Macinato di manzo 5%", "🥩", 137, 21, 0, 5.5, 150],
+    ["f_macinato15", "carni", "Macinato di manzo 15%", "🥩", 215, 18.5, 0, 15, 150],
+    ["f_vitello", "carni", "Fesa di vitello", "🥩", 92, 20.7, 0, 1, 150],
+    ["f_maiale", "carni", "Lonza di maiale", "🥓", 146, 21, 0, 6.9, 150],
+    ["f_agnello", "carni", "Agnello", "🍖", 159, 20, 0, 8.8, 150],
+    ["f_coniglio", "carni", "Coniglio", "🐇", 118, 22, 0, 3.2, 150],
+    ["f_hamburger", "carni", "Hamburger di manzo", "🍔", 230, 17, 0, 18, 120],
+    ["f_salsiccia", "carni", "Salsiccia", "🌭", 304, 15, 0.6, 27, 100],
+    ["f_wurstel", "carni", "Würstel di pollo", "🌭", 230, 13, 3, 19, 100],
+    ["f_bresaola", "carni", "Bresaola", "🥓", 151, 32, 0.4, 2.6, 50],
+    ["f_prosciutto_crudo", "carni", "Prosciutto crudo", "🥓", 250, 26, 0, 16, 50],
+    ["f_prosciutto_cotto", "carni", "Prosciutto cotto", "🥓", 132, 19.8, 0.9, 5.7, 50],
+    ["f_fesa_aff", "carni", "Fesa di tacchino affettata", "🦃", 105, 21, 1, 1.5, 50],
+    ["f_speck", "carni", "Speck", "🥓", 303, 28, 0.5, 21, 30],
+    ["f_salame", "carni", "Salame", "🥓", 400, 26, 1, 33, 30],
+    ["f_mortadella", "carni", "Mortadella", "🥓", 317, 15, 1, 28, 30],
+
+    // --- Pesce ---
+    ["f_tonno", "pesce", "Tonno al naturale", "🐟", 103, 24, 0, 0.8, 80],
+    ["f_tonno_olio", "pesce", "Tonno sott'olio sgocciolato", "🐟", 192, 25, 0, 10, 80],
+    ["f_tonno_fresco", "pesce", "Tonno fresco", "🐟", 130, 23, 0, 4, 150],
+    ["f_salmone", "pesce", "Salmone", "🐟", 185, 20, 0, 11.5, 150],
+    ["f_salmone_aff", "pesce", "Salmone affumicato", "🐟", 147, 25, 0, 4.5, 50],
+    ["f_merluzzo", "pesce", "Merluzzo", "🐟", 71, 17, 0, 0.3, 150],
+    ["f_orata", "pesce", "Orata", "🐠", 121, 20, 0, 4.5, 200],
+    ["f_branzino", "pesce", "Branzino", "🐠", 98, 18.5, 0, 2.6, 200],
+    ["f_sgombro", "pesce", "Sgombro", "🐟", 170, 17, 0, 11, 150],
+    ["f_alici", "pesce", "Alici", "🐟", 96, 16.8, 0, 2.6, 150],
+    ["f_sardine", "pesce", "Sardine", "🐟", 129, 20.8, 0, 4.5, 150],
+    ["f_pesce_spada", "pesce", "Pesce spada", "🐟", 109, 16.9, 0, 4.2, 150],
+    ["f_gamberi", "pesce", "Gamberi", "🦐", 85, 18, 0.5, 1, 150],
+    ["f_calamari", "pesce", "Calamari", "🦑", 68, 12.6, 0.6, 1.7, 150],
+    ["f_polpo", "pesce", "Polpo", "🐙", 57, 10.6, 1.4, 1, 200],
+    ["f_cozze", "pesce", "Cozze", "🦪", 84, 11.7, 3.4, 2.7, 200],
+    ["f_vongole", "pesce", "Vongole", "🦪", 72, 10.2, 2.2, 2.5, 200],
+    ["f_surimi", "pesce", "Surimi", "🦀", 95, 7.6, 15, 0.9, 80],
+
+    // --- Uova & latticini ---
+    ["f_uova", "latticini", "Uovo intero", "🥚", 128, 12.4, 0, 8.7, 60],
+    ["f_albume", "latticini", "Albume", "🥚", 43, 10.7, 0, 0, 100],
+    ["f_yogurt", "latticini", "Yogurt greco 5%", "🥛", 96, 9, 3.6, 5, 170],
+    ["f_yogurt0", "latticini", "Yogurt greco 0%", "🥛", 57, 10.3, 3.6, 0, 170],
+    ["f_yogurt_bianco", "latticini", "Yogurt bianco intero", "🥛", 66, 3.8, 4.3, 3.9, 125],
+    ["f_skyr", "latticini", "Skyr", "🥛", 63, 11, 4, 0.2, 150],
+    ["f_kefir", "latticini", "Kefir", "🥛", 52, 3.5, 4, 2, 200],
+    ["f_latte", "latticini", "Latte parz. scremato", "🥛", 46, 3.3, 4.8, 1.6, 200],
+    ["f_latte_intero", "latticini", "Latte intero", "🥛", 64, 3.3, 4.9, 3.6, 200],
+    ["f_latte_scremato", "latticini", "Latte scremato", "🥛", 34, 3.4, 5, 0.1, 200],
+    ["f_mozzarella", "latticini", "Mozzarella", "🧀", 253, 18.7, 0.7, 19.5, 125],
+    ["f_mozzarella_light", "latticini", "Mozzarella light", "🧀", 163, 19, 1.5, 9, 125],
+    ["f_burrata", "latticini", "Burrata", "🧀", 240, 13, 2, 20, 100],
+    ["f_parmigiano", "latticini", "Parmigiano Reggiano", "🧀", 392, 33, 0, 28, 20],
+    ["f_grana", "latticini", "Grana Padano", "🧀", 398, 33, 0, 29, 20],
+    ["f_ricotta", "latticini", "Ricotta vaccina", "🧀", 146, 8.8, 3.5, 10.9, 100],
+    ["f_fiocchi", "latticini", "Fiocchi di latte", "🧀", 98, 11, 3.4, 4.3, 150],
+    ["f_feta", "latticini", "Feta", "🧀", 264, 14, 4, 21, 50],
+    ["f_spalmabile", "latticini", "Formaggio spalmabile", "🧀", 235, 5.4, 4, 22, 30],
+    ["f_emmental", "latticini", "Emmental", "🧀", 380, 29, 0, 29, 30],
+    ["f_scamorza", "latticini", "Scamorza", "🧀", 334, 25, 1, 25.6, 50],
+    ["f_panna", "latticini", "Panna da cucina", "🥛", 205, 2.5, 3.5, 20, 30],
+
+    // --- Cereali & pane ---
+    ["f_riso", "carboidrati", "Riso", "🍚", 350, 6.7, 79, 0.6, 80],
+    ["f_riso_basmati", "carboidrati", "Riso basmati", "🍚", 350, 8, 77, 1, 80],
+    ["f_riso_integrale", "carboidrati", "Riso integrale", "🍚", 357, 7.5, 76, 2.7, 80],
+    ["f_riso_cotto", "carboidrati", "Riso (cotto)", "🍚", 130, 2.7, 28, 0.3, 200],
+    ["f_pasta", "carboidrati", "Pasta", "🍝", 356, 13, 71, 1.5, 80],
+    ["f_pasta_integrale", "carboidrati", "Pasta integrale", "🍝", 340, 13, 64, 2.5, 80],
+    ["f_pasta_uovo", "carboidrati", "Pasta all'uovo", "🍝", 366, 13, 69, 4, 80],
+    ["f_pasta_cotta", "carboidrati", "Pasta (cotta)", "🍝", 158, 5.8, 31, 0.9, 200],
+    ["f_gnocchi", "carboidrati", "Gnocchi di patate", "🥟", 155, 4, 33, 0.5, 200],
+    ["f_cous", "carboidrati", "Couscous", "🍚", 360, 12.8, 73, 1, 80],
+    ["f_farro", "carboidrati", "Farro", "🌾", 338, 15, 67, 2.5, 80],
+    ["f_orzo", "carboidrati", "Orzo perlato", "🌾", 350, 10.4, 73, 1.4, 80],
+    ["f_quinoa", "carboidrati", "Quinoa", "🌾", 368, 14, 64, 6, 70],
+    ["f_avena", "carboidrati", "Fiocchi d'avena", "🥣", 389, 16.9, 66, 6.9, 50],
+    ["f_pane", "carboidrati", "Pane", "🍞", 265, 9, 49, 3.2, 60],
+    ["f_pane_integrale", "carboidrati", "Pane integrale", "🍞", 247, 10, 41, 3.4, 60],
+    ["f_pane_segale", "carboidrati", "Pane di segale", "🍞", 259, 8.5, 48, 3.3, 60],
+    ["f_pancarre", "carboidrati", "Pancarrè", "🍞", 280, 8, 49, 5, 50],
+    ["f_piadina", "carboidrati", "Piadina", "🫓", 300, 8, 50, 8, 90],
+    ["f_gallette", "carboidrati", "Gallette di riso", "🍘", 380, 8, 80, 2.8, 20],
+    ["f_crackers", "carboidrati", "Crackers", "🍘", 428, 9.4, 70, 11, 25],
+    ["f_fette_biscottate", "carboidrati", "Fette biscottate", "🍞", 408, 11.3, 75, 6, 20],
+    ["f_patate", "carboidrati", "Patate", "🥔", 77, 2, 17, 0.1, 250],
+    ["f_patate_dolci", "carboidrati", "Patate dolci", "🍠", 86, 1.6, 20, 0.1, 200],
+    ["f_polenta", "carboidrati", "Farina di mais (polenta)", "🌽", 362, 8.7, 79, 2.7, 70],
+    ["f_mais", "carboidrati", "Mais in scatola", "🌽", 86, 3, 16, 1.2, 80],
+    ["f_cornflakes", "carboidrati", "Corn flakes", "🥣", 378, 7, 84, 0.9, 40],
+    ["f_muesli", "carboidrati", "Muesli", "🥣", 370, 9.7, 66, 6, 50],
+    ["f_granola", "carboidrati", "Granola", "🥣", 450, 10, 64, 17, 40],
+    ["f_farina", "carboidrati", "Farina 00", "🌾", 340, 11, 73, 1, 50],
+
+    // --- Legumi & proteine vegetali ---
+    ["f_ceci_secchi", "legumi", "Ceci secchi", "🫘", 334, 21, 47, 6.3, 60],
+    ["f_ceci", "legumi", "Ceci in scatola", "🫘", 120, 7, 16, 2.5, 150],
+    ["f_lenticchie_secche", "legumi", "Lenticchie secche", "🫘", 310, 23, 51, 1.5, 60],
+    ["f_lenticchie", "legumi", "Lenticchie lessate", "🫘", 116, 9, 20, 0.4, 150],
+    ["f_fagioli_secchi", "legumi", "Fagioli borlotti secchi", "🫘", 300, 20, 47, 2, 60],
+    ["f_fagioli", "legumi", "Fagioli in scatola", "🫘", 91, 6, 13, 0.5, 150],
+    ["f_fave", "legumi", "Fave secche", "🫘", 340, 27, 55, 1.5, 60],
+    ["f_piselli", "legumi", "Piselli", "🫛", 81, 5.4, 14, 0.4, 150],
+    ["f_edamame", "legumi", "Edamame", "🫛", 121, 12, 9, 5, 100],
+    ["f_tofu", "legumi", "Tofu", "🧈", 120, 13, 2, 7, 100],
+    ["f_tempeh", "legumi", "Tempeh", "🫘", 192, 20, 7.6, 10.8, 100],
+    ["f_seitan", "legumi", "Seitan", "🥩", 140, 25, 6, 2, 100],
+    ["f_hummus", "legumi", "Hummus", "🫘", 200, 7, 14, 13, 50],
+
+    // --- Verdura ---
+    ["f_insalata", "verdura", "Insalata mista", "🥗", 18, 1.4, 2.9, 0.2, 100],
+    ["f_lattuga", "verdura", "Lattuga", "🥬", 15, 1.4, 2.9, 0.2, 80],
+    ["f_rucola", "verdura", "Rucola", "🥬", 25, 2.6, 3.9, 0.7, 50],
+    ["f_spinaci", "verdura", "Spinaci", "🥬", 23, 2.9, 3.6, 0.4, 200],
+    ["f_cavolo_nero", "verdura", "Cavolo nero", "🥬", 49, 4.3, 8.8, 0.9, 150],
+    ["f_broccoli", "verdura", "Broccoli", "🥦", 34, 2.8, 6.6, 0.4, 200],
+    ["f_cavolfiore", "verdura", "Cavolfiore", "🥦", 25, 1.9, 5, 0.3, 200],
+    ["f_cavolini", "verdura", "Cavolini di Bruxelles", "🥬", 43, 3.4, 9, 0.3, 150],
+    ["f_zucchine", "verdura", "Zucchine", "🥒", 17, 1.2, 3.1, 0.3, 200],
+    ["f_cetrioli", "verdura", "Cetrioli", "🥒", 15, 0.7, 3.6, 0.1, 150],
+    ["f_pomodori", "verdura", "Pomodori", "🍅", 18, 0.9, 3.9, 0.2, 150],
+    ["f_pomodorini", "verdura", "Pomodorini", "🍅", 20, 1, 3.5, 0.3, 150],
+    ["f_passata", "verdura", "Passata di pomodoro", "🍅", 32, 1.3, 5.4, 0.2, 100],
+    ["f_carote", "verdura", "Carote", "🥕", 41, 0.9, 9.6, 0.2, 150],
+    ["f_peperoni", "verdura", "Peperoni", "🫑", 26, 1, 6, 0.3, 150],
+    ["f_melanzane", "verdura", "Melanzane", "🍆", 25, 1, 6, 0.2, 200],
+    ["f_funghi", "verdura", "Funghi champignon", "🍄", 22, 3.1, 3.3, 0.3, 150],
+    ["f_fagiolini", "verdura", "Fagiolini", "🫛", 31, 1.8, 7, 0.2, 200],
+    ["f_asparagi", "verdura", "Asparagi", "🌱", 20, 2.2, 3.9, 0.1, 200],
+    ["f_finocchi", "verdura", "Finocchi", "🌿", 31, 1.2, 7.3, 0.2, 200],
+    ["f_carciofi", "verdura", "Carciofi", "🌿", 47, 3.3, 10.5, 0.2, 150],
+    ["f_zucca", "verdura", "Zucca", "🎃", 26, 1, 6.5, 0.1, 200],
+    ["f_cipolla", "verdura", "Cipolla", "🧅", 40, 1.1, 9.3, 0.1, 50],
+    ["f_sedano", "verdura", "Sedano", "🥬", 16, 0.7, 3, 0.2, 100],
+    ["f_barbabietola", "verdura", "Barbabietola", "🥗", 43, 1.6, 9.6, 0.2, 100],
+
+    // --- Frutta ---
+    ["f_banana", "frutta", "Banana", "🍌", 89, 1.1, 23, 0.3, 120],
+    ["f_mela", "frutta", "Mela", "🍎", 52, 0.3, 14, 0.2, 150],
+    ["f_pera", "frutta", "Pera", "🍐", 57, 0.4, 15, 0.1, 150],
+    ["f_arancia", "frutta", "Arancia", "🍊", 47, 0.9, 12, 0.1, 150],
+    ["f_mandarino", "frutta", "Mandarino", "🍊", 53, 0.8, 13, 0.3, 100],
+    ["f_pompelmo", "frutta", "Pompelmo", "🍊", 42, 0.8, 11, 0.1, 200],
+    ["f_kiwi", "frutta", "Kiwi", "🥝", 61, 1.1, 15, 0.5, 100],
+    ["f_fragole", "frutta", "Fragole", "🍓", 32, 0.7, 7.7, 0.3, 150],
+    ["f_mirtilli", "frutta", "Mirtilli", "🫐", 57, 0.7, 14, 0.3, 100],
+    ["f_lamponi", "frutta", "Lamponi", "🍓", 52, 1.2, 12, 0.7, 100],
+    ["f_uva", "frutta", "Uva", "🍇", 69, 0.7, 18, 0.2, 150],
+    ["f_ananas", "frutta", "Ananas", "🍍", 50, 0.5, 13, 0.1, 150],
+    ["f_mango", "frutta", "Mango", "🥭", 60, 0.8, 15, 0.4, 150],
+    ["f_pesca", "frutta", "Pesca", "🍑", 39, 0.9, 10, 0.3, 150],
+    ["f_albicocche", "frutta", "Albicocche", "🍑", 48, 1.4, 11, 0.4, 100],
+    ["f_ciliegie", "frutta", "Ciliegie", "🍒", 63, 1.1, 16, 0.2, 100],
+    ["f_anguria", "frutta", "Anguria", "🍉", 30, 0.6, 7.6, 0.2, 300],
+    ["f_melone", "frutta", "Melone", "🍈", 34, 0.8, 8, 0.2, 200],
+    ["f_avocado", "frutta", "Avocado", "🥑", 160, 2, 8.5, 14.7, 80],
+    ["f_datteri", "frutta", "Datteri secchi", "🌴", 282, 2.5, 75, 0.4, 30],
+    ["f_uvetta", "frutta", "Uvetta", "🍇", 299, 3.1, 79, 0.5, 30],
+    ["f_prugne", "frutta", "Prugne secche", "🫐", 240, 2.2, 64, 0.4, 30],
+
+    // --- Frutta secca & semi ---
+    ["f_mandorle", "fruttasecca", "Mandorle", "🌰", 600, 22, 5, 55, 30],
+    ["f_noci", "fruttasecca", "Noci", "🌰", 689, 14.3, 5, 68, 30],
+    ["f_nocciole", "fruttasecca", "Nocciole", "🌰", 655, 13.8, 6, 64, 30],
+    ["f_anacardi", "fruttasecca", "Anacardi", "🥜", 580, 18, 27, 46, 30],
+    ["f_pistacchi", "fruttasecca", "Pistacchi", "🥜", 608, 18, 8, 56, 30],
+    ["f_arachidi", "fruttasecca", "Arachidi tostate", "🥜", 598, 29, 8.5, 50, 30],
+    ["f_burroarachidi", "fruttasecca", "Burro d'arachidi", "🥜", 588, 25, 20, 50, 20],
+    ["f_semi_chia", "fruttasecca", "Semi di chia", "🌱", 486, 16.5, 8, 31, 15],
+    ["f_semi_lino", "fruttasecca", "Semi di lino", "🌱", 534, 18, 2, 42, 15],
+    ["f_semi_zucca", "fruttasecca", "Semi di zucca", "🎃", 559, 30, 11, 49, 20],
+    ["f_semi_girasole", "fruttasecca", "Semi di girasole", "🌻", 584, 21, 11, 51, 20],
+    ["f_cocco", "fruttasecca", "Cocco rapè", "🥥", 660, 6.9, 6.4, 64, 15],
+
+    // --- Condimenti ---
+    ["f_evo", "condimenti", "Olio EVO", "🫒", 884, 0, 0, 100, 10],
+    ["f_burro", "condimenti", "Burro", "🧈", 717, 0.9, 0.1, 81, 10],
+    ["f_pesto", "condimenti", "Pesto alla genovese", "🌿", 480, 5, 5, 48, 20],
+    ["f_maionese", "condimenti", "Maionese", "🫙", 680, 1, 3, 75, 15],
+    ["f_ketchup", "condimenti", "Ketchup", "🥫", 101, 1.2, 24, 0.2, 20],
+    ["f_salsa_soia", "condimenti", "Salsa di soia", "🫙", 53, 8, 5, 0.6, 10],
+    ["f_aceto_balsamico", "condimenti", "Aceto balsamico", "🫙", 88, 0.5, 17, 0, 10],
+    ["f_miele", "condimenti", "Miele", "🍯", 304, 0.3, 82, 0, 15],
+    ["f_marmellata", "condimenti", "Marmellata", "🫙", 250, 0.5, 60, 0, 20],
+    ["f_zucchero", "condimenti", "Zucchero", "🍬", 392, 0, 100, 0, 5],
+
+    // --- Dolci & snack ---
+    ["f_cioccolato", "snack", "Cioccolato fondente", "🍫", 546, 7.8, 46, 31, 20],
+    ["f_cioccolato_latte", "snack", "Cioccolato al latte", "🍫", 545, 7.7, 57, 31, 20],
+    ["f_nutella", "snack", "Crema spalmabile nocciole", "🍫", 539, 6.3, 57.5, 30.9, 20],
+    ["f_biscotti", "snack", "Biscotti frollini", "🍪", 470, 7, 68, 19, 30],
+    ["f_biscotti_secchi", "snack", "Biscotti secchi", "🍪", 416, 7, 79, 8, 25],
+    ["f_cornetto", "snack", "Cornetto", "🥐", 410, 7.5, 46, 21, 50],
+    ["f_gelato", "snack", "Gelato alla crema", "🍨", 218, 3.8, 24, 12, 100],
+    ["f_patatine", "snack", "Patatine in busta", "🍟", 536, 7, 53, 34, 30],
+    ["f_popcorn", "snack", "Popcorn", "🍿", 387, 13, 78, 4.5, 20],
+    ["f_barretta_cereali", "snack", "Barretta ai cereali", "🥣", 400, 6, 70, 10, 25],
+    ["f_taralli", "snack", "Taralli", "🥨", 450, 10, 65, 17, 30],
+    ["f_grissini", "snack", "Grissini", "🥖", 412, 12, 68, 9, 20],
+
+    // --- Bevande (per 100 ml) ---
+    ["f_caffe", "bevande", "Caffè espresso", "☕", 2, 0.1, 0, 0.2, 30],
+    ["f_cappuccino", "bevande", "Cappuccino", "☕", 37, 2, 3, 2, 150],
+    ["f_succo", "bevande", "Succo d'arancia", "🧃", 45, 0.7, 10.4, 0.2, 200],
+    ["f_cola", "bevande", "Cola", "🥤", 42, 0, 10.6, 0, 330],
+    ["f_cola_zero", "bevande", "Cola zero", "🥤", 0, 0, 0, 0, 330],
+    ["f_the_freddo", "bevande", "Tè freddo", "🧋", 30, 0, 7.5, 0, 330],
+    ["f_isotonico", "bevande", "Bevanda isotonica", "🥤", 26, 0, 6.4, 0, 500],
+    ["f_birra", "bevande", "Birra", "🍺", 43, 0.5, 3.6, 0, 330],
+    ["f_vino", "bevande", "Vino rosso", "🍷", 85, 0.1, 2.6, 0, 150],
+    ["f_latte_mandorla", "bevande", "Bevanda alla mandorla", "🥛", 24, 0.5, 3, 1.1, 200],
+    ["f_latte_soia", "bevande", "Bevanda di soia", "🥛", 39, 3.3, 2.5, 1.8, 200],
+    ["f_latte_avena", "bevande", "Bevanda d'avena", "🥛", 46, 1, 7, 1.5, 200],
+
+    // --- Piatti & integratori ---
+    ["f_whey", "altro", "Proteine whey", "💪", 380, 75, 8, 5, 30],
+    ["f_caseine", "altro", "Caseine", "💪", 360, 80, 6, 1.5, 30],
+    ["f_barretta", "altro", "Barretta proteica", "🍫", 370, 30, 35, 10, 50],
+    ["f_pancake_prot", "altro", "Pancake proteici", "🥞", 200, 16, 22, 5, 150],
+    ["f_pizza", "altro", "Pizza margherita", "🍕", 250, 10.5, 33, 8.5, 300],
+    ["f_lasagne", "altro", "Lasagne alla bolognese", "🍝", 160, 8.6, 13, 8.5, 300],
+    ["f_carbonara", "altro", "Pasta alla carbonara", "🍝", 220, 9, 25, 9.5, 300],
+    ["f_sushi", "altro", "Sushi misto", "🍣", 150, 6, 26, 2, 200],
+    ["f_poke", "altro", "Poke bowl al salmone", "🥗", 140, 8, 16, 5, 400],
+    ["f_kebab", "altro", "Kebab in piadina", "🌯", 230, 12, 22, 10, 300],
+    ["f_panino_hamburger", "altro", "Panino con hamburger", "🍔", 250, 13, 26, 10.5, 250],
+    ["f_toast", "altro", "Toast prosciutto e formaggio", "🥪", 270, 13, 28, 11, 150],
+    ["f_frittata", "altro", "Frittata", "🍳", 175, 11, 1, 14, 150],
+    ["f_minestrone", "altro", "Minestrone", "🍲", 45, 2, 6, 1.3, 300],
+  ];
+
+  const DB = RAW.map(([id, cat, name, emoji, kcal, p, c, f, portion]) => ({ id, cat, name, emoji, kcal, p, c, f, portion }));
+
+  function category(id) {
+    return CATEGORIES.find((c) => c.id === id) || CATEGORIES[CATEGORIES.length - 1];
+  }
+
+  // ricerca tollerante: ignora accenti/maiuscole, tutte le parole devono comparire
+  function normalize(s) {
+    return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  }
+  function search(query, list) {
+    const words = normalize(query).split(/\s+/).filter(Boolean);
+    if (!words.length) return [];
+    return list
+      .map((f) => {
+        const n = normalize(f.name);
+        if (!words.every((w) => n.includes(w))) return null;
+        const score = (n.startsWith(words[0]) ? 0 : 1) + n.length / 100;
+        return { f, score };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.score - b.score)
+      .map((x) => x.f);
+  }
+
+  window.GA.foods = { CATEGORIES, DB, category, search, normalize };
+})();

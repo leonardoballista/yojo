@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Yojo: sagoma piena di fiore di loto, bianca su rosa loto.
+       Un solo petalo ruotato a ventaglio: i petali si fondono in un'unica silhouette. -->
+  <defs>
+    <path id="p" d="M0 0 C -52 -46 -58 -128 0 -196 C 58 -128 52 -46 0 0 Z"/>
+  </defs>
+  <rect width="512" height="512" fill="#EC8F97"/><g transform="translate(256 256) scale(.8) translate(-256 -256)">
+  <g transform="translate(256 362) scale(1.12)" fill="#FFFFFF">
+    <use href="#p" transform="rotate(-66) scale(.74)"/>
+    <use href="#p" transform="rotate(66) scale(.74)"/>
+    <use href="#p" transform="rotate(-34) scale(.9)"/>
+    <use href="#p" transform="rotate(34) scale(.9)"/>
+    <use href="#p"/>
+  </g>
+</g></svg>

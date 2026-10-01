@@ -1,0 +1,17 @@
+{
+  "name": "Yojo — Allenamento, Alimentazione & Benessere",
+  "short_name": "Yojo",
+  "description": "Yojo, l'arte di prendersi cura di sé: scheda interattiva, progressi, dieta e macro giornalieri, sonno e il coach AI Enrico.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF6EA",
+  "theme_color": "#6D4AFF",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
