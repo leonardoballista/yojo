@@ -95,6 +95,7 @@ window.GA = window.GA || {};
     ["f_mascarpone", "latticini", "Mascarpone", "🧀", 455, 4.6, 4, 47, 30],
     ["f_besciamella", "latticini", "Besciamella", "🥛", 135, 4, 10, 9, 50],
     ["f_cheddar", "latticini", "Formaggio a fette (cheddar)", "🧀", 300, 18, 4, 24, 20],
+    ["f_paneer", "latticini", "Paneer", "🧀", 265, 18, 3, 20, 100],
 
     // --- Cereali & pane ---
     ["f_riso", "carboidrati", "Riso", "🍚", 350, 6.7, 79, 0.6, 80],
@@ -127,6 +128,7 @@ window.GA = window.GA || {};
     ["f_muesli", "carboidrati", "Muesli", "🥣", 370, 9.7, 66, 6, 50],
     ["f_granola", "carboidrati", "Granola", "🥣", 450, 10, 64, 17, 40],
     ["f_farina", "carboidrati", "Farina 00", "🌾", 340, 11, 73, 1, 50],
+    ["f_bulgur", "carboidrati", "Bulgur", "🌾", 342, 12, 64, 1.3, 70],
     ["f_pangrattato", "carboidrati", "Pangrattato", "🍞", 395, 13, 72, 5.5, 20],
     ["f_noodles_riso", "carboidrati", "Noodles di riso", "🍜", 364, 6, 80, 0.6, 80],
     ["f_noodles", "carboidrati", "Noodles di grano", "🍜", 350, 11, 70, 2, 80],
@@ -179,6 +181,7 @@ window.GA = window.GA || {};
     ["f_barbabietola", "verdura", "Barbabietola", "🥗", 43, 1.6, 9.6, 0.2, 100],
     ["f_aglio", "verdura", "Aglio", "🧄", 120, 6, 24, 0.5, 5],
     ["f_germogli", "verdura", "Germogli di soia", "🌱", 30, 3, 4, 0.2, 50],
+    ["f_prezzemolo", "verdura", "Prezzemolo", "🌿", 36, 3, 6, 0.8, 20],
 
     // --- Frutta ---
     ["f_banana", "frutta", "Banana", "🍌", 89, 1.1, 23, 0.3, 120],
@@ -216,6 +219,8 @@ window.GA = window.GA || {};
     ["f_semi_lino", "fruttasecca", "Semi di lino", "🌱", 534, 18, 2, 42, 15],
     ["f_semi_zucca", "fruttasecca", "Semi di zucca", "🎃", 559, 30, 11, 49, 20],
     ["f_semi_girasole", "fruttasecca", "Semi di girasole", "🌻", 584, 21, 11, 51, 20],
+    ["f_semi_sesamo", "fruttasecca", "Semi di sesamo", "🌱", 573, 18, 12, 50, 10],
+    ["f_tahina", "fruttasecca", "Tahina (crema di sesamo)", "🥜", 595, 17, 10, 54, 15],
     ["f_cocco", "fruttasecca", "Cocco rapè", "🥥", 660, 6.9, 6.4, 64, 15],
 
     // --- Condimenti ---
@@ -232,6 +237,8 @@ window.GA = window.GA || {};
     ["f_ghee", "condimenti", "Burro chiarificato (ghee)", "🧈", 900, 0, 0, 99.5, 10],
     ["f_olio_semi", "condimenti", "Olio di semi", "🌻", 899, 0, 0, 99.9, 10],
     ["f_spezie", "condimenti", "Spezie miste (curry, garam masala…)", "🌶️", 300, 12, 40, 12, 3],
+    ["f_miso", "condimenti", "Miso", "🫙", 199, 12, 26, 6, 15],
+    ["f_salsa_pesce", "condimenti", "Salsa di pesce (nam pla)", "🫙", 35, 5, 4, 0, 10],
     ["f_teriyaki", "condimenti", "Salsa teriyaki", "🫙", 90, 6, 16, 0, 20],
     ["f_caesar", "condimenti", "Salsa Caesar", "🫙", 450, 2, 4, 47, 20],
     ["f_salsa_burger", "condimenti", "Salsa burger", "🫙", 350, 1, 12, 33, 15],

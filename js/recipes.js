@@ -83,13 +83,48 @@ window.GA = window.GA || {};
     ["Yogurt bowl con granola", "🥣", "yogurt e granola, yogurt bowl", [["f_yogurt0", 170], ["f_granola", 30], ["f_mirtilli", 80], ["f_miele", 10]]],
     ["Pancake avena e albumi", "🥞", "pancake proteici fatti in casa, pancake avena", [["f_avena", 50], ["f_albume", 150], ["f_banana", 60]]],
     ["Tiramisù", "🍰", "tiramisu", [["f_mascarpone", 50], ["f_savoiardi", 30], ["f_uova", 25], ["f_zucchero", 12], ["f_caffe", 40]]],
+
+    // --- Cucina dal mondo, ad alto contenuto proteico ---
+    // Indiana
+    ["Pollo tandoori con riso", "🍗", "tandoori chicken, pollo tandoori", [["f_pollo", 200], ["f_yogurt0", 60], ["f_spezie", 5], ["f_aglio", 4], ["f_evo", 5], ["f_riso_basmati", 60]], "Indiana"],
+    ["Chicken saag con riso", "🥬", "saag chicken, pollo agli spinaci, murgh saag", [["f_pollo", 170], ["f_spinaci", 200], ["f_cipolla", 40], ["f_yogurt0", 50], ["f_ghee", 8], ["f_aglio", 5], ["f_spezie", 4], ["f_riso_basmati", 60]], "Indiana"],
+    ["Palak paneer con riso", "🧀", "palak paneer, paneer agli spinaci", [["f_paneer", 120], ["f_spinaci", 200], ["f_cipolla", 40], ["f_yogurt0", 40], ["f_ghee", 8], ["f_aglio", 5], ["f_spezie", 4], ["f_riso_basmati", 60]], "Indiana"],
+    ["Chicken biryani", "🍛", "biryani, biryani di pollo, pollo biryani", [["f_pollo", 160], ["f_riso_basmati", 80], ["f_yogurt0", 50], ["f_cipolla", 50], ["f_ghee", 10], ["f_spezie", 5]], "Indiana"],
+    // Giapponese
+    ["Salmone teriyaki con riso ed edamame", "🍣", "salmone teriyaki, salmon teriyaki", [["f_salmone", 150], ["f_teriyaki", 25], ["f_riso", 70], ["f_edamame", 60]], "Giapponese"],
+    ["Chirashi di salmone e tonno", "🍣", "chirashi, sashimi bowl, chirashi sushi", [["f_riso", 80], ["f_salmone", 80], ["f_tonno_fresco", 80], ["f_edamame", 40], ["f_salsa_soia", 10]], "Giapponese"],
+    ["Oyakodon", "🍳", "oyako don, pollo e uova con riso", [["f_pollo", 150], ["f_uova", 100], ["f_cipolla", 50], ["f_salsa_soia", 15], ["f_zucchero", 5], ["f_riso", 80]], "Giapponese"],
+    ["Ramen con pollo e uovo", "🍜", "ramen, ramen al pollo, miso ramen", [["f_noodles", 80], ["f_pollo", 150], ["f_uova", 60], ["f_brodo", 400], ["f_miso", 15], ["f_germogli", 30]], "Giapponese"],
+    ["Tataki di tonno con edamame", "🐟", "tataki, tuna tataki, tataki di tonno", [["f_tonno_fresco", 180], ["f_semi_sesamo", 8], ["f_salsa_soia", 15], ["f_olio_semi", 5], ["f_edamame", 100]], "Giapponese"],
+    // Cinese
+    ["Pollo kung pao con riso", "🥜", "kung pao, pollo kung pao, gong bao", [["f_pollo", 170], ["f_arachidi", 20], ["f_peperoni", 80], ["f_salsa_soia", 15], ["f_olio_semi", 10], ["f_zucchero", 5], ["f_riso", 70]], "Cinese"],
+    ["Manzo e broccoli con riso", "🥦", "manzo con broccoli, beef and broccoli", [["f_manzo", 170], ["f_broccoli", 200], ["f_salsa_soia", 20], ["f_olio_semi", 10], ["f_zucchero", 5], ["f_riso", 70]], "Cinese"],
+    ["Mapo tofu con riso", "🌶️", "mapo tofu, tofu piccante", [["f_tofu", 250], ["f_macinato", 80], ["f_salsa_soia", 15], ["f_olio_semi", 10], ["f_spezie", 3], ["f_riso", 60]], "Cinese"],
+    ["Gamberi saltati con verdure e riso", "🦐", "gamberi saltati, stir fry di gamberi, gamberi alla cinese", [["f_gamberi", 200], ["f_peperoni", 100], ["f_zucchine", 100], ["f_salsa_soia", 15], ["f_olio_semi", 10], ["f_riso", 70]], "Cinese"],
+    // Thailandese
+    ["Pad kra pao con uovo", "🌿", "kra pao, pad krapow, pollo al basilico thai", [["f_pollo", 180], ["f_uova", 60], ["f_peperoni", 50], ["f_aglio", 5], ["f_salsa_soia", 10], ["f_salsa_pesce", 10], ["f_olio_semi", 10], ["f_riso", 70]], "Thailandese"],
+    ["Larb gai", "🥬", "larb, laab, insalata thai di pollo", [["f_pollo", 180], ["f_cipolla", 30], ["f_salsa_pesce", 15], ["f_lattuga", 80], ["f_riso", 50]], "Thailandese"],
+    ["Satay di pollo con salsa di arachidi", "🍢", "satay, sate ayam, pollo satay", [["f_pollo", 180], ["f_burroarachidi", 25], ["f_latte_cocco", 30], ["f_salsa_soia", 10], ["f_cetrioli", 50], ["f_riso", 60]], "Thailandese"],
+    ["Tom yum ai gamberi", "🍲", "tom yum, tom yum goong, zuppa thai", [["f_gamberi", 200], ["f_funghi", 100], ["f_pomodori", 60], ["f_brodo", 400], ["f_salsa_pesce", 15]], "Thailandese"],
+    // Libanese
+    ["Shish taouk con hummus", "🍢", "shish tawook, shish taouk, spiedini di pollo libanesi", [["f_pollo", 180], ["f_yogurt0", 40], ["f_evo", 10], ["f_hummus", 60], ["f_pane_pita", 60], ["f_insalata", 80]], "Libanese"],
+    ["Kafta con tabbouleh", "🥙", "kafta, kofta, polpette libanesi", [["f_macinato", 150], ["f_cipolla", 20], ["f_bulgur", 40], ["f_prezzemolo", 30], ["f_pomodori", 80], ["f_evo", 10], ["f_yogurt0", 50]], "Libanese"],
+    ["Shawarma di pollo nella pita", "🌯", "shawarma, shawarma di pollo, chicken shawarma", [["f_pane_pita", 90], ["f_pollo", 160], ["f_tahina", 15], ["f_yogurt0", 40], ["f_pomodori", 40], ["f_cetrioli", 30], ["f_cipolla", 20]], "Libanese"],
+    ["Hummus con carne", "🫘", "hummus bil lahme, hummus con manzo", [["f_hummus", 150], ["f_macinato", 100], ["f_evo", 5], ["f_pane_pita", 50]], "Libanese"],
+    // Indonesiana
+    ["Nasi goreng con pollo e uovo", "🍳", "nasi goreng, riso fritto indonesiano", [["f_riso", 80], ["f_pollo", 140], ["f_uova", 60], ["f_salsa_soia", 15], ["f_olio_semi", 12], ["f_cipolla", 30], ["f_carote", 40]], "Indonesiana"],
+    ["Gado-gado con tempeh e uova", "🥗", "gado gado, insalata indonesiana", [["f_tempeh", 120], ["f_uova", 100], ["f_patate", 100], ["f_fagiolini", 80], ["f_germogli", 40], ["f_burroarachidi", 20], ["f_salsa_soia", 10]], "Indonesiana"],
+    ["Rendang di manzo con riso", "🥘", "rendang, beef rendang", [["f_manzo", 180], ["f_latte_cocco", 60], ["f_cipolla", 30], ["f_spezie", 5], ["f_olio_semi", 5], ["f_riso", 70]], "Indonesiana"],
+    ["Mie goreng ai gamberi", "🍜", "mie goreng, noodles fritti indonesiani", [["f_noodles", 80], ["f_gamberi", 150], ["f_uova", 50], ["f_peperoni", 60], ["f_salsa_soia", 15], ["f_olio_semi", 12]], "Indonesiana"],
+    // Coreana
+    ["Bibimbap con manzo", "🍚", "bibimbap", [["f_riso", 80], ["f_manzo", 130], ["f_uova", 60], ["f_spinaci", 60], ["f_carote", 40], ["f_germogli", 40], ["f_olio_semi", 8], ["f_salsa_soia", 10]], "Coreana"],
   ];
 
   let builtIn = null;
   function catalog() {
     if (builtIn) return builtIn;
-    builtIn = RAW.map(([name, emoji, alias, ing], i) => ({
-      id: "yojo_" + i, builtIn: true, name, emoji,
+    builtIn = RAW.map(([name, emoji, alias, ing, cuisine], i) => ({
+      id: "yojo_" + i, builtIn: true, name, emoji, cuisine: cuisine || "",
       aliases: alias.split(",").map((s) => s.trim()).filter(Boolean),
       ingredients: ing.map(([fid, g]) => ingredientFromFood(foods().DB.find((f) => f.id === fid), g)).filter(Boolean),
     }));
@@ -149,9 +184,10 @@ window.GA = window.GA || {};
   const phrasesOf = (r) => [r.name].concat(r.aliases || []);
 
   // ricerca mentre scrivi: tutte le parole (anche a metà) devono comparire nel nome o in un alias
+  // qui conta anche la cucina: "thai" o "indiana" elencano i piatti di quel paese
   function fuzzyScore(r, qTok) {
     let best = null;
-    phrasesOf(r).forEach((ph, i) => {
+    phrasesOf(r).concat(r.cuisine ? ["cucina " + r.cuisine + (r.cuisine === "Thailandese" ? " thai" : "")] : []).forEach((ph, i) => {
       const pTok = tokens(ph);
       if (!qTok.every((qt) => pTok.some((pt) => pt.startsWith(stem(qt))))) return;
       const s = (pTok[0] && pTok[0].startsWith(stem(qTok[0])) ? 0 : 1) + (i ? 0.3 : 0) + ph.length / 200;
@@ -296,12 +332,21 @@ window.GA = window.GA || {};
       '</div><div class="fr-meta">' + (aiOn ? "Ingredienti e porzioni ricostruiti al volo" : "Aggiungi tu ingredienti e grammi") + '</div></div><div class="add-dot">' + ui().icon(aiOn ? "sparkle" : "plus") + "</div></div>";
   }
 
+  const CUISINES = [
+    { id: "Indiana", flag: "🇮🇳" }, { id: "Giapponese", flag: "🇯🇵" }, { id: "Cinese", flag: "🇨🇳" }, { id: "Thailandese", flag: "🇹🇭" },
+    { id: "Libanese", flag: "🇱🇧" }, { id: "Indonesiana", flag: "🇮🇩" }, { id: "Coreana", flag: "🇰🇷" },
+  ];
+  // proteine della porzione, in evidenza se il piatto è davvero proteico
+  function proteinMeta(r, t) {
+    return '<span class="mm-p"' + (t.p >= 35 ? ' style="font-weight:800;"' : "") + ">💪 " + Math.round(t.p) + " g prot</span>";
+  }
+
   // Righe ricetta per i risultati di ricerca (anche nella barra principale e nel selettore del pasto)
   function searchRowsHtml(q, limit) {
     return suggestions(q, limit).map(({ r, mine }) => {
       const t = totals(r);
       return '<div class="food-row clickable" data-rbrow="' + r.id + '"><div class="food-tile" style="--tint:' + TINT + '">' + (r.emoji || "🍲") + "</div>" +
-        '<div class="fr-main"><div class="fr-name">' + ui().escapeHtml(r.name) + (mine ? " 📖" : "") + '</div><div class="fr-meta"><span>' + (mine ? "La tua ricetta" : "Ricettario Yojo") + " · " + r.ingredients.length + " ingredienti</span></div></div>" +
+        '<div class="fr-main"><div class="fr-name">' + ui().escapeHtml(r.name) + (mine ? " 📖" : "") + '</div><div class="fr-meta">' + proteinMeta(r, t) + "<span>" + (mine ? "La tua ricetta" : r.cuisine || "Ricettario Yojo") + "</span></div></div>" +
         '<div class="fr-kcal">' + Math.round(t.kcal) + " <small>kcal</small></div></div>";
     }).join("");
   }
@@ -322,21 +367,36 @@ window.GA = window.GA || {};
     const html =
       '<div class="sheet-title">📖 Libro delle ricette</div>' +
       '<div class="searchbar" style="margin-top:0;">' + ui().icon("search") + '<input type="search" id="bk-q" placeholder="Cerca un piatto…" autocomplete="off" /></div>' +
-      '<button class="btn secondary" id="bk-new" style="margin-top:12px;">' + ui().icon("plus") + " Nuova ricetta</button>" +
+      '<div class="chip-row" id="bk-filters" style="margin-top:12px;">' +
+      '<button class="chip" data-bkf="protein"><span class="em">💪</span>Più proteiche</button>' +
+      CUISINES.map((c) => '<button class="chip" data-bkf="' + c.id + '"><span class="em">' + c.flag + "</span>" + c.id + "</button>").join("") + "</div>" +
+      '<button class="btn secondary" id="bk-new" style="margin-top:8px;">' + ui().icon("plus") + " Nuova ricetta</button>" +
       '<div id="bk-list"></div>';
     const overlay = ui().openSheet(html);
     const q = overlay.querySelector("#bk-q");
     const list = overlay.querySelector("#bk-list");
+    let filt = "";
     const row = (r) => {
       const t = totals(r);
       return '<div class="food-row clickable" data-rbrow="' + r.id + '"><div class="food-tile" style="--tint:' + TINT + '">' + (r.emoji || "🍲") + "</div>" +
-        '<div class="fr-main"><div class="fr-name">' + ui().escapeHtml(r.name) + '</div><div class="fr-meta"><span>' + r.ingredients.length + " ingredienti · " + Math.round(t.grams) + " g</span>" + (r.uses ? "<span>mangiato " + r.uses + (r.uses === 1 ? " volta" : " volte") + "</span>" : "") + "</div></div>" +
+        '<div class="fr-main"><div class="fr-name">' + ui().escapeHtml(r.name) + '</div><div class="fr-meta">' + proteinMeta(r, t) + (r.cuisine ? "<span>" + r.cuisine + "</span>" : "") + (r.uses ? "<span>mangiato " + r.uses + (r.uses === 1 ? " volta" : " volte") + "</span>" : "") + "</div></div>" +
         '<div class="fr-kcal">' + Math.round(t.kcal) + " <small>kcal</small></div></div>";
     };
+    overlay.querySelectorAll("[data-bkf]").forEach((b) => b.addEventListener("click", () => {
+      filt = filt === b.dataset.bkf ? "" : b.dataset.bkf;
+      overlay.querySelectorAll("[data-bkf]").forEach((x) => x.classList.toggle("on", x.dataset.bkf === filt));
+      draw();
+    }));
     function draw() {
       const term = q.value.trim();
       const qTok = tokens(term);
-      const filter = (arr) => (qTok.length ? arr.filter((r) => fuzzyScore(r, qTok) != null) : arr);
+      const byProtein = (a, b) => totals(b).p - totals(a).p;
+      const filter = (arr) => {
+        let out = qTok.length ? arr.filter((r) => fuzzyScore(r, qTok) != null) : arr;
+        if (filt === "protein") out = out.filter((r) => totals(r).p >= 35).sort(byProtein);
+        else if (filt) out = out.filter((r) => r.cuisine === filt).sort(byProtein);
+        return out;
+      };
       const mine = filter(book(db().getData()).slice().sort((a, b) => a.name.localeCompare(b.name, "it")));
       const yojo = filter(catalog());
       let html = '<div class="section-title" style="font-size:16px;">Le tue ricette <span class="badge">' + mine.length + "</span></div>";

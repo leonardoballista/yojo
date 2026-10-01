@@ -1,4 +1,4 @@
-const CACHE = "yojo-cache-v12";
+const CACHE = "yojo-cache-v13";
 const ASSETS = [
   "./",
   "./index.html",
