@@ -65,6 +65,7 @@ window.GA = window.GA || {};
     ["f_polpo", "pesce", "Polpo", "🐙", 57, 10.6, 1.4, 1, 200],
     ["f_cozze", "pesce", "Cozze", "🦪", 84, 11.7, 3.4, 2.7, 200],
     ["f_vongole", "pesce", "Vongole", "🦪", 72, 10.2, 2.2, 2.5, 200],
+    ["f_baccala", "pesce", "Baccalà ammollato", "🐟", 95, 21.5, 0, 0.6, 200],
     ["f_surimi", "pesce", "Surimi", "🦀", 95, 7.6, 15, 0.9, 80],
 
     // --- Uova & latticini ---
@@ -96,6 +97,8 @@ window.GA = window.GA || {};
     ["f_besciamella", "latticini", "Besciamella", "🥛", 135, 4, 10, 9, 50],
     ["f_cheddar", "latticini", "Formaggio a fette (cheddar)", "🧀", 300, 18, 4, 24, 20],
     ["f_paneer", "latticini", "Paneer", "🧀", 265, 18, 3, 20, 100],
+    ["f_halloumi", "latticini", "Halloumi", "🧀", 321, 21, 2, 25, 60],
+    ["f_quark", "latticini", "Quark magro", "🥛", 67, 12, 4, 0.2, 150],
 
     // --- Cereali & pane ---
     ["f_riso", "carboidrati", "Riso", "🍚", 350, 6.7, 79, 0.6, 80],
@@ -129,6 +132,10 @@ window.GA = window.GA || {};
     ["f_granola", "carboidrati", "Granola", "🥣", 450, 10, 64, 17, 40],
     ["f_farina", "carboidrati", "Farina 00", "🌾", 340, 11, 73, 1, 50],
     ["f_bulgur", "carboidrati", "Bulgur", "🌾", 342, 12, 64, 1.3, 70],
+    ["f_soba", "carboidrati", "Soba (grano saraceno)", "🍜", 336, 14, 68, 0.7, 80],
+    ["f_tortilla_mais", "carboidrati", "Tortilla di mais", "🌮", 218, 5.7, 44, 2.9, 30],
+    ["f_naan", "carboidrati", "Pane naan", "🫓", 290, 9, 50, 6, 80],
+    ["f_injera", "carboidrati", "Injera", "🫓", 166, 6, 33, 1, 120],
     ["f_pangrattato", "carboidrati", "Pangrattato", "🍞", 395, 13, 72, 5.5, 20],
     ["f_noodles_riso", "carboidrati", "Noodles di riso", "🍜", 364, 6, 80, 0.6, 80],
     ["f_noodles", "carboidrati", "Noodles di grano", "🍜", 350, 11, 70, 2, 80],
@@ -151,6 +158,7 @@ window.GA = window.GA || {};
     ["f_tofu", "legumi", "Tofu", "🧈", 120, 13, 2, 7, 100],
     ["f_tempeh", "legumi", "Tempeh", "🫘", 192, 20, 7.6, 10.8, 100],
     ["f_seitan", "legumi", "Seitan", "🥩", 140, 25, 6, 2, 100],
+    ["f_azuki", "legumi", "Fagioli azuki secchi", "🫘", 329, 20, 50, 0.5, 40],
     ["f_hummus", "legumi", "Hummus", "🫘", 200, 7, 14, 13, 50],
 
     // --- Verdura ---
@@ -182,6 +190,9 @@ window.GA = window.GA || {};
     ["f_aglio", "verdura", "Aglio", "🧄", 120, 6, 24, 0.5, 5],
     ["f_germogli", "verdura", "Germogli di soia", "🌱", 30, 3, 4, 0.2, 50],
     ["f_prezzemolo", "verdura", "Prezzemolo", "🌿", 36, 3, 6, 0.8, 20],
+    ["f_pak_choi", "verdura", "Pak choi", "🥬", 13, 1.5, 2, 0.2, 100],
+    ["f_cavolo_cappuccio", "verdura", "Cavolo cappuccio", "🥬", 25, 1.3, 5.8, 0.1, 100],
+    ["f_kimchi", "verdura", "Kimchi", "🥬", 23, 1.6, 2.4, 0.5, 80],
 
     // --- Frutta ---
     ["f_banana", "frutta", "Banana", "🍌", 89, 1.1, 23, 0.3, 120],
@@ -239,6 +250,9 @@ window.GA = window.GA || {};
     ["f_spezie", "condimenti", "Spezie miste (curry, garam masala…)", "🌶️", 300, 12, 40, 12, 3],
     ["f_miso", "condimenti", "Miso", "🫙", 199, 12, 26, 6, 15],
     ["f_salsa_pesce", "condimenti", "Salsa di pesce (nam pla)", "🫙", 35, 5, 4, 0, 10],
+    ["f_salsa_ostrica", "condimenti", "Salsa di ostriche", "🫙", 51, 1.4, 11, 0.3, 10],
+    ["f_gochujang", "condimenti", "Gochujang", "🌶️", 210, 4, 45, 1.5, 15],
+    ["f_salsa_bbq", "condimenti", "Salsa barbecue", "🫙", 172, 1, 40, 0.6, 20],
     ["f_teriyaki", "condimenti", "Salsa teriyaki", "🫙", 90, 6, 16, 0, 20],
     ["f_caesar", "condimenti", "Salsa Caesar", "🫙", 450, 2, 4, 47, 20],
     ["f_salsa_burger", "condimenti", "Salsa burger", "🫙", 350, 1, 12, 33, 15],
@@ -258,6 +272,9 @@ window.GA = window.GA || {};
     ["f_taralli", "snack", "Taralli", "🥨", 450, 10, 65, 17, 30],
     ["f_grissini", "snack", "Grissini", "🥖", 412, 12, 68, 9, 20],
     ["f_savoiardi", "snack", "Savoiardi", "🍪", 390, 8, 80, 4, 30],
+    ["f_cacao", "snack", "Cacao amaro in polvere", "🍫", 228, 19.6, 11, 13.7, 5],
+    ["f_dolcificante", "condimenti", "Dolcificante (eritritolo)", "🍬", 0, 0, 0, 0, 5],
+    ["f_gelatina", "altro", "Gelatina in fogli", "🍮", 335, 85, 0, 0.1, 4],
 
     // --- Bevande (per 100 ml) ---
     ["f_caffe", "bevande", "Caffè espresso", "☕", 2, 0.1, 0, 0.2, 30],

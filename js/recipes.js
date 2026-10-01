@@ -34,7 +34,7 @@ window.GA = window.GA || {};
     ["Pollo tikka masala", "🍛", "tikka masala, chicken tikka masala, pollo tikka", [["f_pollo", 150], ["f_ghee", 10], ["f_cipolla", 60], ["f_passata", 120], ["f_yogurt_bianco", 40], ["f_panna", 30], ["f_anacardi", 15], ["f_aglio", 5], ["f_spezie", 4], ["f_riso_basmati", 80]]],
     ["Butter chicken con riso", "🍛", "butter chicken, murgh makhani, pollo al burro", [["f_pollo", 150], ["f_burro", 15], ["f_cipolla", 50], ["f_passata", 120], ["f_panna", 50], ["f_anacardi", 10], ["f_aglio", 5], ["f_spezie", 4], ["f_riso_basmati", 80]]],
     ["Pollo al curry con riso", "🍛", "pollo al curry, curry di pollo, chicken curry", [["f_pollo", 150], ["f_latte_cocco", 100], ["f_cipolla", 50], ["f_evo", 10], ["f_spezie", 5], ["f_riso_basmati", 80]]],
-    ["Dal di lenticchie con riso", "🥘", "dahl, dhal, daal, dal di lenticchie, lenticchie indiane", [["f_lenticchie_secche", 70], ["f_cipolla", 50], ["f_passata", 80], ["f_ghee", 10], ["f_aglio", 5], ["f_spezie", 4], ["f_riso_basmati", 60]]],
+    ["Dal di lenticchie con riso", "🥘", "dahl, dhal, daal, lenticchie indiane", [["f_lenticchie_secche", 70], ["f_cipolla", 50], ["f_passata", 80], ["f_ghee", 10], ["f_aglio", 5], ["f_spezie", 4], ["f_riso_basmati", 60]]],
     ["Pasta alla carbonara", "🍝", "carbonara, spaghetti alla carbonara", [["f_pasta", 100], ["f_guanciale", 40], ["f_uova", 50], ["f_tuorlo", 20], ["f_pecorino", 20]]],
     ["Pasta all'amatriciana", "🍝", "amatriciana, bucatini all'amatriciana", [["f_pasta", 100], ["f_guanciale", 40], ["f_passata", 120], ["f_pecorino", 15], ["f_vino_bianco", 10]]],
     ["Pasta cacio e pepe", "🍝", "cacio e pepe, tonnarelli cacio e pepe", [["f_pasta", 100], ["f_pecorino", 50]]],
@@ -61,7 +61,7 @@ window.GA = window.GA || {};
     ["Burrito di manzo", "🌯", "burrito", [["f_tortilla", 70], ["f_macinato15", 80], ["f_riso", 50], ["f_fagioli", 80], ["f_cheddar", 20], ["f_passata", 40], ["f_avocado", 30]]],
     ["Fajitas di pollo", "🌮", "fajitas", [["f_tortilla", 140], ["f_pollo", 150], ["f_peperoni", 100], ["f_cipolla", 50], ["f_olio_semi", 10], ["f_spezie", 3]]],
     ["Chili con carne e riso", "🌶️", "chili con carne", [["f_macinato15", 120], ["f_fagioli", 120], ["f_passata", 150], ["f_cipolla", 40], ["f_peperoni", 50], ["f_evo", 10], ["f_spezie", 4], ["f_riso", 60]]],
-    ["Hamburger fatto in casa", "🍔", "burger, cheeseburger, hamburger con panino", [["f_panino_burger", 80], ["f_hamburger", 150], ["f_cheddar", 20], ["f_lattuga", 20], ["f_pomodori", 30], ["f_salsa_burger", 15]]],
+    ["Hamburger fatto in casa", "🍔", "cheeseburger, burger fatto in casa", [["f_panino_burger", 80], ["f_hamburger", 150], ["f_cheddar", 20], ["f_lattuga", 20], ["f_pomodori", 30], ["f_salsa_burger", 15]]],
     ["Gyros pita", "🥙", "gyros, pita gyros", [["f_pane_pita", 90], ["f_maiale", 120], ["f_yogurt_bianco", 40], ["f_cetrioli", 20], ["f_pomodori", 40], ["f_cipolla", 20], ["f_patatine_forno", 50]]],
     ["Pollo con patate al forno", "🍗", "pollo e patate, pollo al forno con patate", [["f_pollo", 150], ["f_patate", 250], ["f_evo", 15]]],
     ["Cotoletta con patatine", "🍗", "cotoletta, cotoletta alla milanese, pollo impanato, schnitzel", [["f_pollo", 150], ["f_uova", 25], ["f_pangrattato", 30], ["f_olio_semi", 20], ["f_patatine_forno", 150]]],
@@ -123,8 +123,8 @@ window.GA = window.GA || {};
   let builtIn = null;
   function catalog() {
     if (builtIn) return builtIn;
-    builtIn = RAW.map(([name, emoji, alias, ing, cuisine], i) => ({
-      id: "yojo_" + i, builtIn: true, name, emoji, cuisine: cuisine || "",
+    builtIn = RAW.concat(window.GA.recipeWorld || []).map(([name, emoji, alias, ing, cuisine, kind], i) => ({
+      id: "yojo_" + i, builtIn: true, name, emoji, cuisine: cuisine || "", dessert: kind === "dolce",
       aliases: alias.split(",").map((s) => s.trim()).filter(Boolean),
       ingredients: ing.map(([fid, g]) => ingredientFromFood(foods().DB.find((f) => f.id === fid), g)).filter(Boolean),
     }));
@@ -278,12 +278,110 @@ window.GA = window.GA || {};
     }
   }
 
+  /* ---------------- Idee di oggi: una ricetta per pasto ---------------- */
+  // A che pasti si addice ogni piatto. Di base: i dolci sono spuntini, il resto è pranzo o cena;
+  // qui sotto le eccezioni (colazioni dolci e salate, piatti da brunch, spuntini salati).
+  const BREAKFAST_SWEET = ["colazione", "spuntini"];
+  const SLOTS = {
+    // colazioni
+    "Porridge con banana": BREAKFAST_SWEET, "Overnight oats": BREAKFAST_SWEET, "Yogurt bowl con granola": BREAKFAST_SWEET,
+    "Pancake avena e albumi": BREAKFAST_SWEET, "Pancake proteici con mirtilli": BREAKFAST_SWEET, "Crêpes proteiche con skyr e mirtilli": BREAKFAST_SWEET,
+    "Kaiserschmarrn proteico": BREAKFAST_SWEET, "Syrniki": BREAKFAST_SWEET, "Skyr con mirtilli e granola": BREAKFAST_SWEET,
+    "Yogurt greco con miele e noci": BREAKFAST_SWEET, "Labneh con datteri e pistacchi": BREAKFAST_SWEET, "Dorayaki proteici": BREAKFAST_SWEET,
+    "Açaí bowl proteica": BREAKFAST_SWEET, "Banana bread proteico": BREAKFAST_SWEET, "Chia pudding proteico ai lamponi": BREAKFAST_SWEET,
+    "Torta di mele proteica": BREAKFAST_SWEET, "Shrikhand": BREAKFAST_SWEET,
+    "Uova strapazzate e pane": ["colazione"], "Avocado toast con uovo": ["colazione", "spuntini"],
+    "Omelette di albumi con fiocchi di latte": ["colazione", "cena"], "Frittata di albumi e spinaci": ["colazione", "pranzo", "cena"],
+    "Menemen con feta": ["colazione", "pranzo"], "Steak and eggs": ["colazione", "pranzo"], "Shakshuka": ["colazione", "pranzo", "cena"],
+    // spuntini salati o leggeri
+    "Bresaola rucola e grana": ["pranzo", "cena", "spuntini"], "Involtini estivi di gamberi": ["pranzo", "spuntini"],
+    "Piadina tacchino e mozzarella light": ["pranzo", "spuntini"], "Tiramisù": ["spuntini"],
+  };
+  function slotsOf(r) {
+    return SLOTS[r.name] || (r.dessert ? ["spuntini"] : ["pranzo", "cena"]);
+  }
+
+  const IDEA_MEALS = [
+    { id: "colazione", label: "Colazione", emoji: "☀️", color: "#FFC83D" },
+    { id: "pranzo", label: "Pranzo", emoji: "🍝", color: "#FF9F43" },
+    { id: "cena", label: "Cena", emoji: "🌙", color: "#C77DFF" },
+    { id: "spuntini", label: "Spuntino", emoji: "🍎", color: "#FF4D8D" },
+  ];
+
+  // hash stabile: stessa data → stesse idee per tutto il giorno, su qualsiasi schermata
+  function hash(s) {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+
+  function pickFor(iso, meal, roll, exclude) {
+    const pool = catalog().filter((r) => slotsOf(r).includes(meal) && !exclude.includes(r.id));
+    return pool.length ? pool[hash(iso + "|" + meal + "|" + roll) % pool.length] : null;
+  }
+
+  // Le idee di un giorno: niente doppioni tra i pasti e niente ripetizioni rispetto a ieri
+  function ideasFor(iso, rolls) {
+    const yesterday = rolls ? ideasFor(window.GA.coach.todayISO(-1), null) : {};
+    const taken = [];
+    const out = {};
+    IDEA_MEALS.forEach((m) => {
+      const r = pickFor(iso, m.id, (rolls && rolls[m.id]) || 0, taken.concat(yesterday[m.id] ? [yesterday[m.id].id] : []));
+      if (r) { out[m.id] = r; taken.push(r.id); }
+    });
+    return out;
+  }
+
+  function todayRolls(data) {
+    const st = data.nutrition.ideaRolls;
+    return st && st.date === window.GA.coach.todayISO() ? st.rolls : {};
+  }
+
+  function ideasInner(data) {
+    const ideas = ideasFor(window.GA.coach.todayISO(), todayRolls(data));
+    const now = nut().defaultMeal();
+    return IDEA_MEALS.filter((m) => ideas[m.id]).map((m) => {
+      const r = ideas[m.id];
+      const t = totals(r);
+      return '<div class="food-row clickable idea-row' + (m.id === now ? " now" : "") + '" data-idea="' + r.id + '" data-ideameal="' + m.id + '">' +
+        '<div class="meal-emoji" style="background:' + m.color + ';width:38px;height:38px;font-size:18px;flex-shrink:0;">' + m.emoji + "</div>" +
+        '<div class="fr-main"><div class="idea-meal">' + m.label + (m.id === now ? ' <span class="badge accent">adesso</span>' : "") + "</div>" +
+        '<div class="fr-name">' + (r.emoji || "🍲") + " " + ui().escapeHtml(r.name) + "</div>" +
+        '<div class="fr-meta">' + proteinMeta(r, t) + "<span>" + Math.round(t.kcal) + " kcal</span>" + (r.cuisine ? "<span>" + (FLAGS[r.cuisine] || "🌍") + " " + r.cuisine + "</span>" : "") + "</div></div>" +
+        '<button class="iconbtn plain idea-roll" data-reroll="' + m.id + '" aria-label="Un\'altra idea per ' + m.label.toLowerCase() + '">🔄</button></div>';
+    }).join("");
+  }
+
+  function wireIdeas(root) {
+    const box = root.querySelector("#rb-ideas");
+    if (!box) return;
+    box.querySelectorAll("[data-idea]").forEach((row) => row.addEventListener("click", (e) => {
+      if (e.target.closest("[data-reroll]")) return;
+      openRecipe(getRecipe(row.dataset.idea), { meal: row.dataset.ideameal });
+    }));
+    box.querySelectorAll("[data-reroll]").forEach((b) => b.addEventListener("click", () => {
+      const meal = b.dataset.reroll;
+      const d = db().updateData((x) => {
+        const iso = window.GA.coach.todayISO();
+        if (!x.nutrition.ideaRolls || x.nutrition.ideaRolls.date !== iso) x.nutrition.ideaRolls = { date: iso, rolls: {} };
+        x.nutrition.ideaRolls.rolls[meal] = (x.nutrition.ideaRolls.rolls[meal] || 0) + 1;
+      });
+      ui().haptic(8);
+      box.innerHTML = ideasInner(d);
+      wireIdeas(root);
+      const row = box.querySelector('[data-ideameal="' + meal + '"]');
+      if (row) row.classList.add("enter");
+    }));
+  }
+
   /* ---------------- Card nella sezione Cibo ---------------- */
   function cardHtml(data) {
     const aiOn = ai().isConfigured();
     const mine = book(data).slice().sort((a, b) => (b.uses || 0) - (a.uses || 0) || (b.lastUsed || b.updatedAt || 0) - (a.lastUsed || a.updatedAt || 0));
     const examples = ["Pollo tikka masala", "Pasta alla carbonara", "Poke bowl al salmone", "Porridge con banana"].map((n) => catalog().find((r) => r.name === n)).filter(Boolean);
     return (
+      '<div class="section-title">Idee di oggi <span class="small muted" style="font-family:var(--font-body);font-weight:700;">cambiano ogni giorno</span></div>' +
+      '<div class="card" id="rb-ideas" style="padding:4px 14px;">' + ideasInner(data) + "</div>" +
       '<div class="section-title">Libro delle ricette <button class="link-btn" id="rb-all">📖 ' + (mine.length ? "Tutte (" + mine.length + ")" : "Sfoglia") + "</button></div>" +
       '<div class="card tint-violet rb-card">' +
       '<div style="font-family:var(--font-display);font-weight:800;font-size:17px;line-height:1.25;">Scrivi il piatto che hai mangiato</div>' +
@@ -306,6 +404,7 @@ window.GA = window.GA || {};
   }
 
   function wireCard(container) {
+    wireIdeas(container);
     const q = container.querySelector("#rb-q");
     if (!q) return;
     const box = container.querySelector("#rb-sug");
@@ -332,13 +431,23 @@ window.GA = window.GA || {};
       '</div><div class="fr-meta">' + (aiOn ? "Ingredienti e porzioni ricostruiti al volo" : "Aggiungi tu ingredienti e grammi") + '</div></div><div class="add-dot">' + ui().icon(aiOn ? "sparkle" : "plus") + "</div></div>";
   }
 
-  const CUISINES = [
-    { id: "Indiana", flag: "🇮🇳" }, { id: "Giapponese", flag: "🇯🇵" }, { id: "Cinese", flag: "🇨🇳" }, { id: "Thailandese", flag: "🇹🇭" },
-    { id: "Libanese", flag: "🇱🇧" }, { id: "Indonesiana", flag: "🇮🇩" }, { id: "Coreana", flag: "🇰🇷" },
-  ];
+  const FLAGS = {
+    Italiana: "🇮🇹", Spagnola: "🇪🇸", Portoghese: "🇵🇹", Francese: "🇫🇷", Greca: "🇬🇷", Turca: "🇹🇷", Britannica: "🇬🇧", Ungherese: "🇭🇺",
+    Russa: "🇷🇺", Scandinava: "🇸🇪", Libanese: "🇱🇧", Persiana: "🇮🇷", Mediorientale: "🧆", Marocchina: "🇲🇦", Etiope: "🇪🇹",
+    "Africa occidentale": "🇳🇬", Sudafricana: "🇿🇦", Indiana: "🇮🇳", Pakistana: "🇵🇰", Giapponese: "🇯🇵", Cinese: "🇨🇳", Coreana: "🇰🇷",
+    Thailandese: "🇹🇭", Vietnamita: "🇻🇳", Filippina: "🇵🇭", Malese: "🇲🇾", Indonesiana: "🇮🇩", Messicana: "🇲🇽", Peruviana: "🇵🇪",
+    Brasiliana: "🇧🇷", Argentina: "🇦🇷", Caraibica: "🇯🇲", Americana: "🇺🇸", Hawaiana: "🌺",
+    Tedesca: "🇩🇪", Austriaca: "🇦🇹", Islandese: "🇮🇸", Australiana: "🇦🇺", Internazionale: "🌍",
+  };
+  // le cucine del ricettario, dalla più ricca di piatti
+  function cuisines() {
+    const n = {};
+    catalog().forEach((r) => { if (r.cuisine) n[r.cuisine] = (n[r.cuisine] || 0) + 1; });
+    return Object.keys(n).sort((a, b) => n[b] - n[a] || a.localeCompare(b, "it")).map((id) => ({ id, flag: FLAGS[id] || "🌍" }));
+  }
   // proteine della porzione, in evidenza se il piatto è davvero proteico
   function proteinMeta(r, t) {
-    return '<span class="mm-p"' + (t.p >= 35 ? ' style="font-weight:800;"' : "") + ">💪 " + Math.round(t.p) + " g prot</span>";
+    return '<span class="mm-p"' + (t.p >= (r.dessert ? 25 : 35) ? ' style="font-weight:800;"' : "") + ">💪 " + Math.round(t.p) + " g prot</span>" + (r.dessert ? "<span>🍰 dolce</span>" : "");
   }
 
   // Righe ricetta per i risultati di ricerca (anche nella barra principale e nel selettore del pasto)
@@ -369,13 +478,15 @@ window.GA = window.GA || {};
       '<div class="searchbar" style="margin-top:0;">' + ui().icon("search") + '<input type="search" id="bk-q" placeholder="Cerca un piatto…" autocomplete="off" /></div>' +
       '<div class="chip-row" id="bk-filters" style="margin-top:12px;">' +
       '<button class="chip" data-bkf="protein"><span class="em">💪</span>Più proteiche</button>' +
-      CUISINES.map((c) => '<button class="chip" data-bkf="' + c.id + '"><span class="em">' + c.flag + "</span>" + c.id + "</button>").join("") + "</div>" +
+      '<button class="chip" data-bkf="dessert"><span class="em">🍰</span>Dolci proteici</button>' +
+      cuisines().map((c) => '<button class="chip" data-bkf="' + c.id + '"><span class="em">' + c.flag + "</span>" + c.id + "</button>").join("") + "</div>" +
       '<button class="btn secondary" id="bk-new" style="margin-top:8px;">' + ui().icon("plus") + " Nuova ricetta</button>" +
       '<div id="bk-list"></div>';
     const overlay = ui().openSheet(html);
     const q = overlay.querySelector("#bk-q");
     const list = overlay.querySelector("#bk-list");
     let filt = "";
+    let showAll = false;
     const row = (r) => {
       const t = totals(r);
       return '<div class="food-row clickable" data-rbrow="' + r.id + '"><div class="food-tile" style="--tint:' + TINT + '">' + (r.emoji || "🍲") + "</div>" +
@@ -394,6 +505,7 @@ window.GA = window.GA || {};
       const filter = (arr) => {
         let out = qTok.length ? arr.filter((r) => fuzzyScore(r, qTok) != null) : arr;
         if (filt === "protein") out = out.filter((r) => totals(r).p >= 35).sort(byProtein);
+        else if (filt === "dessert") out = out.filter((r) => r.dessert).sort(byProtein);
         else if (filt) out = out.filter((r) => r.cuisine === filt).sort(byProtein);
         return out;
       };
@@ -403,10 +515,15 @@ window.GA = window.GA || {};
       html += mine.length ? '<div class="card" style="padding:4px 14px;">' + mine.map(row).join("") + "</div>"
         : '<div class="empty" style="padding:14px 10px;">' + (term ? "Nessuna tua ricetta con questo nome." : "Ancora nessuna: crea la prima o scegline una qui sotto.") + "</div>";
       html += '<div class="section-title" style="font-size:16px;">Ricettario di Yojo <span class="badge">' + yojo.length + "</span></div>";
-      html += yojo.length ? '<div class="card" style="padding:4px 14px;">' + yojo.map(row).join("") + "</div>" : "";
+      // senza ricerca né filtri il ricettario è lungo: mostro i primi e il resto su richiesta
+      const shown = term || filt || showAll ? yojo : yojo.slice(0, 25);
+      html += yojo.length ? '<div class="card" style="padding:4px 14px;">' + shown.map(row).join("") + "</div>" : "";
+      if (shown.length < yojo.length) html += '<button class="btn secondary" id="bk-more" style="margin-top:10px;">Mostra tutte le ' + yojo.length + " ricette</button>";
       if (term) html += '<div class="card" style="padding:4px 14px;margin-top:12px;">' + askRowHtml(term) + "</div>";
       list.innerHTML = html;
       wireRows(list);
+      const more = list.querySelector("#bk-more");
+      if (more) more.addEventListener("click", () => { showAll = true; draw(); });
       const ask = list.querySelector("[data-rbask]");
       if (ask) ask.addEventListener("click", () => resolve(term));
     }
@@ -701,5 +818,5 @@ window.GA = window.GA || {};
     });
   }
 
-  window.GA.recipes = { cardHtml, wireCard, searchRowsHtml, wireRows, openBook, openLog, openEditor, openRecipe, resolve, matchDish, dishItem, saveRecipe, getRecipe, totals, promptContext, snapshotFor };
+  window.GA.recipes = { cardHtml, wireCard, ideasFor, slotsOf, searchRowsHtml, wireRows, openBook, openLog, openEditor, openRecipe, resolve, matchDish, dishItem, saveRecipe, getRecipe, totals, promptContext, snapshotFor };
 })();

@@ -382,6 +382,11 @@ h1.page-title .hl{ background: linear-gradient(transparent 58%, var(--lime) 58%,
 .rb-ing-line{ display:flex; justify-content:space-between; gap:10px; font-size:13px; font-weight:700; padding:4px 0; }
 .rb-ing-line + .rb-ing-line{ border-top: 1.5px dashed var(--line); }
 .rb-ing-line .muted{ white-space:nowrap; font-weight:600; }
+.idea-meal{ font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color: var(--ink-soft); display:flex; align-items:center; gap:6px; }
+.idea-meal .badge{ text-transform:none; letter-spacing:0; padding:1px 7px; }
+.idea-row .fr-name{ white-space:normal; line-height:1.25; }
+.idea-roll{ font-size:18px; width:40px; height:40px; flex-shrink:0; }
+.idea-roll:active{ transform: rotate(-180deg); transition: transform .3s ease; }
 .ph-preview{ width:100%; max-height:220px; object-fit:cover; border-radius: var(--radius-m); border: var(--bw) solid var(--edge); display:block; }
 
 /* fabbisogno */

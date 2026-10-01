@@ -1,4 +1,4 @@
-const CACHE = "yojo-cache-v13";
+const CACHE = "yojo-cache-v16";
 const ASSETS = [
   "./",
   "./index.html",
@@ -19,6 +19,7 @@ const ASSETS = [
   "./js/nutrition.js",
   "./js/dietimport.js",
   "./js/quicklog.js",
+  "./js/recipedb.js",
   "./js/recipes.js",
   "./js/sleep.js",
   "./js/app.js",

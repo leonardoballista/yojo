@@ -134,6 +134,7 @@ window.GA = window.GA || {};
         customFoods: [],
         mealLog: {}, // dateISO -> {colazione:[],pranzo:[],cena:[],spuntini:[]}
         savedRecipes: [],
+        ideaRolls: null, // {date, rolls:{pasto: n}} — quante volte hai chiesto un'altra idea oggi
         recipeBook: [], // {id, name, emoji, source, ingredients:[{name,grams,kcal,p,c,f,emoji,cat,foodId?}] per 1 porzione, uses, lastUsed, createdAt, updatedAt}
         dietPlan: null, // {name, notes, source, importedAt, targets?, days:[{id,label,weekday,meals:[{meal,label,items:[{name,grams,kcal,p,c,f,emoji,alternatives}]}]}]}
         dietDone: {}, // dateISO -> {dayId, meals:[indici dei pasti già segnati nel diario]}
